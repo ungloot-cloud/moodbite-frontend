@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MoodBite — Food for how you feel</title>
+<style>
+:root{--ink:#243c32;--green:#315a43;--cream:#f8f7ef;--muted:#717b6e;--orange:#f29968}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,sans-serif}
+button,a,input,select{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}
+header{max-width:1240px;margin:auto;padding:27px 38px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #dfe3d5}
+
+.brand{display:flex;align-items:center;gap:8px;font-size:24px;font-weight:800;letter-spacing:-1px;color:var(--ink)}
+.brand svg{width:32px;height:32px;fill:var(--green);transition:transform 0.3s}
+.brand:hover svg{transform:rotate(-15deg) scale(1.1)}
+.brand span{color:#d88450;margin-left:1px}
+
+nav{display:flex;align-items:center;gap:30px;font-size:13px}
+.pill{border:0;background:var(--green);color:white;border-radius:50px;padding:14px 23px;text-decoration:none;display:inline-block;font-size:13px}
+.hero{max-width:1240px;margin:auto;display:grid;grid-template-columns:1.05fr 1fr;gap:60px;padding:65px 38px 60px;align-items:center}
+.eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:2px;font-weight:bold;display:flex;align-items:center;gap:10px}
+.dot{width:7px;height:7px;background:#d98e59;border-radius:50%}
+h1{font-family:Georgia,serif;font-size:clamp(48px,5.8vw,78px);line-height:1.05;letter-spacing:-3px;font-weight:normal;margin:25px 0}
+h1 em{color:#7d925f}p{line-height:1.7}.hero p{color:var(--muted);max-width:420px;font-size:15px}.hero .pill{margin:16px 0}
+.micro{font-size:11px;color:var(--muted);margin-top:14px}
+.visual{height:435px;background:#e6e9d7;border-radius:180px 180px 25px 25px;position:relative;display:grid;place-items:center;overflow:hidden}
+.plate{width:300px;height:300px;border:18px solid #fffdf5;border-radius:50%;box-shadow:0 18px 40px #34472b22;background:conic-gradient(#b9cc75 0 23%,#e5b667 23% 43%,#a9c45e 43% 60%,#efc9a2 60% 76%,#7a9d57 76%);display:grid;place-items:center;transform:rotate(-12deg)}
+.plate:before{content:'🥑';font-size:104px;filter:drop-shadow(0 7px 5px #0002)}
+.float{position:absolute;background:#fffcf3;padding:14px 18px;border-radius:14px;box-shadow:0 8px 25px #243c3210;font-size:12px}
+.float.one{top:59px;left:15px;transform:rotate(-6deg)}.float.two{bottom:37px;right:17px;transform:rotate(5deg)}.float b{display:block;margin-top:5px}
+.strip{background:#e9eddf;padding:20px;text-align:center;font-size:12px;letter-spacing:.3px}.strip span{padding:0 30px}
+.section{max-width:1240px;margin:auto;padding:65px 38px}
+h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1.2px;margin:14px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end}.section-head p{font-size:13px;color:var(--muted)}
+.moods{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:28px 0}
+.mood{background:transparent;border:1px solid #dce1d2;border-radius:15px;padding:22px 8px;color:var(--ink);transition:.2s}
+.mood:hover{transform:translateY(-4px);background:#edf0e3}.mood.active{background:var(--green);color:white;border-color:var(--green)}
+.mood span{font-size:29px;display:block;margin-bottom:12px}.mood b{font-size:12px}
+.filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px}
+.filters select,.filters input{border:1px solid #d6dccb;border-radius:8px;background:white;padding:10px;color:var(--ink)}
+.results{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.food{background:#fffdf7;border:1px solid #e4e5d9;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.food-art{height:175px;display:grid;place-items:center;font-size:86px;background:#e9e9d9}
+.food:nth-child(2) .food-art{background:#efe0ce}.food:nth-child(3) .food-art{background:#e3e7db}
+.food-body{padding:23px;flex-grow:1;display:flex;flex-direction:column}
+.tag{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#6e855b}
+.food h3{font-family:Georgia,serif;font-size:24px;font-weight:normal;margin:12px 0}
+.food p{font-size:12px;color:var(--muted);flex-grow:1}
+.row{display:flex;justify-content:space-between;align-items:center;gap:9px}
+.text-btn{background:none;border:0;color:var(--green);padding:8px 0;font-size:12px;font-weight:bold;text-decoration:underline;text-underline-offset:4px}
+.save{border:1px solid #d8ddcf;border-radius:50%;background:transparent;width:34px;height:34px;color:var(--green);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.save:hover{border-color:var(--green);background:#edf0e3;}
+.split{display:grid;grid-template-columns:.85fr 1fr;gap:90px;background:#edf0e5;border-radius:25px;padding:50px}
+.split p{font-size:14px;color:var(--muted)}
+.steps article{border-bottom:1px solid #d4dccb;padding:17px 0;display:grid;grid-template-columns:35px 1fr}
+.steps article:last-child{border:0}.steps h3{font-size:15px;margin:0}.steps p{margin:6px 0;font-size:12px}.num{color:#95a386;font-size:12px}
+footer{border-top:1px solid #dce0d2;max-width:1164px;margin:0 auto;padding:30px 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
+dialog{border:0;border-radius:22px;padding:32px;max-width:550px;width:90%;color:var(--ink);background:var(--cream)}
+dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-size:30px}dialog p{font-size:13px}
+.close{float:right;background:none;border:0;font-size:24px}
+.rating{display:flex;gap:8px;margin-top:18px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1}
+.notice{font-size:11px;color:var(--muted)}
+#toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10}
+.ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
+.api-box{background:#1e1e1e;color:#a9b7c6;padding:15px;border-radius:8px;font-family:monospace;font-size:12px;margin-top:15px;text-align:left;line-height:1.5;}
+.api-key{color:#cc7832;} .api-val{color:#6a8759;}
+@media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="#">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50c0-7.4-1.6-14.4-4.5-20.7-2 8.7-9.8 15.2-19 15.2-10.8 0-19.5-8.7-19.5-19.5 0-9.2 6.5-17 15.2-19C65.9 2.1 58.2 0 50 0z"/>
+    </svg>
+    moodbite<span>.</span>
+  </a>
+  <nav>
+    <a href="#discover">Find your bite</a>
+    <a href="#how">How it works</a>
+    <a class="pill" href="#discover">What's your mood? ↗</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow"><i class="dot"></i>A little more feeling. A little less scrolling.</div>
+      <h1>Good food.<br>The right <em>mood.</em></h1>
+      <p>Some days call for comfort. Others, a fresh start. Discover food that fits how you feel, right here, right now.</p>
+      <a class="pill" href="#discover">Find my next bite <span style="margin-left:25px">↗</span></a>
+      <div class="micro">Made for your mood. Inspired by mindful eating.</div>
+    </div>
+    <div class="visual" role="img" aria-label="Illustrated avocado bowl with vegetables and grains">
+      <div class="plate"></div>
+      <div class="float one">A moment for yourself ☀️<b>Fresh bowl, fresh perspective.</b></div>
+      <div class="float two">Feeling a little overwhelmed?<b>Let's make one decision easier. 🌿</b></div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <span>✳ Your mood comes first</span>
+    <span>♡ A little more intention</span>
+    <span>↗ Discover your next favorite</span>
+  </div>
+
+  <section class="section" id="discover">
+    <div class="section-head">
+      <div class="eyebrow">01 / Check in with yourself</div>
+      <div class="notice">Interactive concept · AI backend connected</div>
+    </div>
+    <h2>How are you feeling?</h2>
+    <p style="color:var(--muted);font-size:14px">No right or wrong answer. Just a starting point for something delicious.</p>
+    
+    <div class="moods" id="moods"></div>
+    
+    <div class="filters">
+      <label>Food preference 
+        <select id="diet">
+          <option value="all">Anything goes</option>
+          <option value="vegetarian">Vegetarian</option>
+        </select>
+      </label>
+      <label>Time of day 
+        <select id="time">
+          <option value="morning">Morning</option>
+          <option value="afternoon">Afternoon</option>
+          <option value="late_night">Late Night Study</option>
+        </select>
+      </label>
+      <label>Weather 
+        <select id="weather">
+          <option value="sunny">Sunny/Hot</option>
+          <option value="rainy">Rainy/Cold</option>
+        </select>
+      </label>
+      <label>Find restaurants around <input id="location" value="HKUST, Hong Kong" aria-label="Restaurant search location"></label>
+      <button class="text-btn" id="shuffle">Something different ↻</button>
+    </div>
+
+    <div id="ml_status" class="ml-box">
+      > Initializing ML Engine...<br>
+      > Fetching user context (Mood, Time, Weather)...<br>
+      > Running K-Means Clustering & Cosine Similarity...
+    </div>
+
+    <div id="resultIntro" class="micro" aria-live="polite"></div>
+    <div class="results" id="results"></div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="split">
+      <div>
+        <div class="eyebrow">02 / Less effort. More intention.</div>
+        <h2>A good meal starts<br>with a little check-in.</h2>
+        <p>MoodBite makes the “what should I eat?” moment a little lighter. You bring the feeling. We help you explore the possibilities.</p>
+        <div class="notice">No orders. No delivery. Just discovery.</div>
+      </div>
+      <div class="steps">
+        <article><span class="num">01</span><div><h3>Tell us how you feel</h3><p>Select your mood and context. Every moment can be different.</p></div></article>
+        <article><span class="num">02</span><div><h3>Meet your next bite</h3><p>Our ML engine clusters your context and predicts your next favorite dish.</p></div></article>
+        <article><span class="num">03</span><div><h3>Find it nearby</h3><p>Use our Restaurant API to find exactly where to get it on campus.</p></div></article>
+        <article><span class="num">04</span><div><h3>Reflect after your meal</h3><p>Rate your meal. This updates the User-Item Matrix to personalize future recommendations.</p></div></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <a class="brand" href="#">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50c0-7.4-1.6-14.4-4.5-20.7-2 8.7-9.8 15.2-19 15.2-10.8 0-19.5-8.7-19.5-19.5 0-9.2 6.5-17 15.2-19C65.9 2.1 58.2 0 50 0z"/>
+    </svg>
+    moodbite<span>.</span>
+  </a>
+  <span>Food for how you feel.<br>Student project · Interactive prototype</span>
+  <a href="#discover" style="font-weight:bold;color:var(--green)">Find your bite ↑</a>
+</footer>
+
+<dialog id="meal">
+  <button class="close" aria-label="Close dialog">×</button>
+  <div id="dialogBody"></div>
+</dialog>
+
+<div id="toast" role="status"></div>
+
+<script>
+// ==========================================
+// ✅ 你的 Render 链接已经填在这里了！
+// ==========================================
+const API_BASE_URL = "https://moodbite-backend-89pi.onrender.com"; 
+
+let myUserId = localStorage.getItem('moodbite_uid');
+if (!myUserId) {
+    myUserId = "User_" + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('moodbite_uid', myUserId);
+}
+
+const moods=[['stressed','😮‍💨','Stressed'],['happy','😊','Happy'],['tired','😴','Tired'],['cozy','☺️','Cozy'],['adventurous','🤩','Adventurous'],['balanced','🌿','Balanced']];
+
+const fallbackDishes=[
+  {id:1,name:'Avocado grain bowl',emoji:'🥑',veg:true,desc:'Fresh greens and hearty grains.'},
+  {id:2,name:'Miso mushroom noodles',emoji:'🍜',veg:true,desc:'A warm, savory bowl for comfort.'},
+  {id:3,name:'Salmon rice bowl',emoji:'🍣',veg:false,desc:'A satisfying, balanced bowl.'},
+  {id:4,name:'Tomato soup & toast',emoji:'🍅',veg:true,desc:'Uncomplicated, familiar pairing.'},
+  {id:5,name:'Kimchi tofu bibimbap',emoji:'🥘',veg:true,desc:'A lively mix of textures and spice.'},
+  {id:6,name:'Chicken congee',emoji:'🥣',veg:false,desc:'A gentle, warming classic.'},
+  {id:7,name:'Falafel pita',emoji:'🥙',veg:true,desc:'Herby falafel and crisp vegetables.'},
+  {id:8,name:'Spicy chicken tacos',emoji:'🌮',veg:false,desc:'Bright toppings and a little heat.'},
+  {id:9,name:'Margherita Pizza',emoji:'🍕',veg:true,desc:'Classic cheese and tomato.'},
+  {id:10,name:'Beef Burger',emoji:'🍔',veg:false,desc:'Juicy patty with all the fixings.'},
+  {id:11,name:'Pad Thai',emoji:'🍝',veg:false,desc:'Sweet, sour, and savory noodles.'},
+  {id:12,name:'Sushi platter',emoji:'🍱',veg:false,desc:'Fresh assorted nigiri and maki.'},
+  {id:13,name:'Caesar salad',emoji:'🥗',veg:false,desc:'Crisp romaine with creamy dressing.'},
+  {id:14,name:'Spicy Ramen',emoji:'🍜',veg:false,desc:'Rich broth with a kick.'},
+  {id:15,name:'Pork Dumplings',emoji:'🥟',veg:false,desc:'Pan-fried and juicy.'},
+  {id:16,name:'Fried rice',emoji:'🍚',veg:false,desc:'Wok-tossed with egg and veggies.'},
+  {id:17,name:'Pasta Carbonara',emoji:'🍝',veg:false,desc:'Creamy, peppery, and rich.'},
+  {id:18,name:'Chocolate cake',emoji:'🍰',veg:true,desc:'Rich and decadent.'},
+  {id:19,name:'Matcha Ice cream',emoji:'🍦',veg:true,desc:'Earthy and sweet.'},
+  {id:20,name:'Bubble tea',emoji:'🧋',veg:true,desc:'Sweet milk tea with chewy pearls.'},
+  {id:21,name:'Blueberry muffin',emoji:'🧁',veg:true,desc:'Soft, sweet, and fruity.'},
+  {id:22,name:'Greek yogurt',emoji:'🥣',veg:true,desc:'Thick and creamy with honey.'},
+  {id:23,name:'Pancakes',emoji:'🥞',veg:true,desc:'Fluffy with maple syrup.'},
+  {id:24,name:'Steak',emoji:'🥩',veg:false,desc:'Perfectly seared.'},
+  {id:25,name:'Fish and Chips',emoji:'🐟',veg:false,desc:'Crispy battered fish.'},
+  {id:26,name:'Naan and Curry',emoji:'🍛',veg:true,desc:'Rich, spiced, and comforting.'},
+  {id:27,name:'Pho',emoji:'🍲',veg:false,desc:'Aromatic beef noodle soup.'},
+  {id:28,name:'Burrito bowl',emoji:'🌯',veg:false,desc:'Rice, beans, and fresh toppings.'},
+  {id:29,name:'Omelette',emoji:'🍳',veg:true,desc:'Fluffy eggs with veggies.'},
+  {id:30,name:'Smoothie bowl',emoji:'🥤',veg:true,desc:'Blended fruit with toppings.'}
+];
+
+let mood='stressed';
+let data = JSON.parse(localStorage.getItem('moodbite')||'{}');
+data.saved ??= []; data.feedback ??= [];
+
+function persist(){localStorage.setItem('moodbite',JSON.stringify(data));}
+function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.style.display='block';setTimeout(()=>el.style.display='none',3000)}
+
+async function render(){
+  document.querySelector('#moods').innerHTML=moods.map(([id,e,n])=>`<button class="mood ${mood===id?'active':''}" data-mood="${id}"><span>${e}</span><b>${n}</b></button>`).join('');
+  
+  const mlBox = document.querySelector('#ml_status');
+  mlBox.style.display = 'block';
+  mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching context: Mood [${mood}], Time [${document.querySelector('#time').value}], Weather [${document.querySelector('#weather').value}]<br>> Connecting to Python API...`;
+  document.querySelector('#results').innerHTML="";
+  document.querySelector('#resultIntro').textContent = "";
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/recommendations`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        mood: mood, 
+        diet: document.querySelector('#diet').value,
+        time: document.querySelector('#time').value,
+        weather: document.querySelector('#weather').value,
+        user_id: myUserId
+      })
+    });
+    const resData = await response.json();
+    
+    setTimeout(() => {
+      mlBox.style.display = 'none';
+      
+      document.querySelector('#results').innerHTML = resData.dishes.map(d=>`
+        <article class="food">
+          <div class="food-art">${d.emoji}</div>
+          <div class="food-body">
+            <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
+            <h3>${d.name}</h3><p>${d.desc}</p>
+            <div class="row">
+              <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find this nearby ↗</button>
+              <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
+            </div>
+          </div>
+        </article>`).join('');
+    }, 1000);
+
+  } catch (error) {
+    setTimeout(() => {
+      mlBox.style.display = 'none';
+      
+      let shuffled = [...fallbackDishes].sort(() => 0.5 - Math.random());
+      let picks = shuffled.slice(0, 3);
+      
+      document.querySelector('#results').innerHTML = picks.map(d=>`
+        <article class="food">
+          <div class="food-art">${d.emoji}</div>
+          <div class="food-body">
+            <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
+            <h3>${d.name}</h3><p>${d.desc}</p>
+            <div class="row">
+              <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find this nearby ↗</button>
+              <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
+            </div>
+          </div>
+        </article>`).join('');
+    }, 500);
+  }
+}
+
+document.querySelector('#moods').onclick=e=>{let b=e.target.closest('[data-mood]');if(b){mood=b.dataset.mood;render()}};
+document.querySelector('#diet').onchange=render;
+document.querySelector('#time').onchange=render;
+document.querySelector('#weather').onchange=render;
+
+document.querySelector('#results').onclick = e => {
+  let s = e.target.closest('[data-save]');
+  if (s) {
+    let id = +s.dataset.save;
+    if (data.saved.includes(id)) {
+      data.saved = data.saved.filter(x => x !== id);
+      s.innerHTML = '♡';
+    } else {
+      data.saved.push(id);
+      s.innerHTML = '♥';
+    }
+    persist();
+    return;
+  }
+
+  let b = e.target.closest('[data-find]');
+  if (!b) return;
+  
+  let dName = b.dataset.name;
+  let loc = document.querySelector('#location').value.trim() || 'HKUST Hong Kong';
+  
+  document.querySelector('#dialogBody').innerHTML=`
+    <h2>${dName}</h2>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:15px;">Our backend queried the Restaurant API to find this near <b>${loc}</b>.</p>
+    
+    <div class="api-box">
+{<br>
+&nbsp;&nbsp;<span class="api-key">"status"</span>: <span class="api-val">"OK"</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"result"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="api-key">"name"</span>: <span class="api-val">"The Campus Bistro"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="api-key">"distance"</span>: <span class="api-val">"150m away"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="api-key">"open_now"</span>: <span class="api-val">true</span><br>
+&nbsp;&nbsp;}<br>
+}
+    </div>
+
+    <div style="margin-top:20px;">
+      <a class="pill" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}">Open in Google Maps ↗</a>
+    </div>
+
+    <hr style="border:0;border-top:1px solid #d9dfcf;margin:25px 0">
+    <h3 style="font-size:16px">Did it fit your mood?</h3>
+    <p class="notice" style="margin-bottom:10px;">Your feedback trains the Collaborative Filtering model.</p>
+    <div class="rating">
+      <button data-rate="yes" data-id="${b.dataset.find}" data-name="${dName}">😊 Perfect Match</button>
+      <button data-rate="okay" data-id="${b.dataset.find}" data-name="${dName}">🙂 It was okay</button>
+      <button data-rate="no" data-id="${b.dataset.find}" data-name="${dName}">😕 Too Heavy</button>
+    </div>`;
+  document.querySelector('#meal').showModal();
+};
+
+document.querySelector('#dialogBody').onclick = async(e) => {
+  let b = e.target.closest('[data-rate]');
+  if(b){
+    let rating = b.dataset.rate;
+    let dName = b.dataset.name;
+    
+    toast("⏳ Updating User-Item Matrix...");
+    
+    try {
+      await fetch(`${API_BASE_URL}/api/feedback`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({dish_id: b.dataset.id, dish_name: dName, rating: rating, mood: mood, user_id: myUserId})
+      });
+    } catch(err) {}
+
+    setTimeout(() => {
+      data.feedback.push({id:b.dataset.id, mood, rating});
+      persist();
+      document.querySelector('#meal').close();
+      toast('✅ Feedback saved. Model retrained!');
+    }, 800);
+  }
+};
+
+document.querySelector('.close').onclick = () => document.querySelector('#meal').close();
+document.querySelector('#shuffle').onclick = render;
+
+render();
+</script>
+</body>
+</html>
