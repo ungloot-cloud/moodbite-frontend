@@ -9,12 +9,10 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,sans-serif}
 button,a,input,select{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}
 header{max-width:1240px;margin:auto;padding:27px 38px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #dfe3d5}
-
 .brand{display:flex;align-items:center;gap:8px;font-size:24px;font-weight:800;letter-spacing:-1px;color:var(--ink)}
 .brand svg{width:32px;height:32px;fill:var(--green);transition:transform 0.3s}
 .brand:hover svg{transform:rotate(-15deg) scale(1.1)}
 .brand span{color:#d88450;margin-left:1px}
-
 nav{display:flex;align-items:center;gap:30px;font-size:13px}
 .pill{border:0;background:var(--green);color:white;border-radius:50px;padding:14px 23px;text-decoration:none;display:inline-block;font-size:13px}
 .hero{max-width:1240px;margin:auto;display:grid;grid-template-columns:1.05fr 1fr;gap:60px;padding:65px 38px 60px;align-items:center}
@@ -184,7 +182,6 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 <div id="toast" role="status"></div>
 
 <script>
-// ✅ 你的 Render 链接
 const API_BASE_URL = "https://moodbite-backend-89pi.onrender.com"; 
 
 let myUserId = localStorage.getItem('moodbite_uid');
@@ -195,37 +192,108 @@ if (!myUserId) {
 
 const moods=[['stressed','😮‍💨','Stressed'],['happy','😊','Happy'],['tired','😴','Tired'],['cozy','☺️','Cozy'],['adventurous','🤩','Adventurous'],['balanced','🌿','Balanced']];
 
+// Massive 100-item fallback array (Matches backend indices)
 const fallbackDishes=[
-  {id:1,name:'Avocado grain bowl',emoji:'🥑',veg:true,desc:'Fresh greens and hearty grains.'},
-  {id:2,name:'Miso mushroom noodles',emoji:'🍜',veg:true,desc:'A warm, savory bowl for comfort.'},
-  {id:3,name:'Salmon rice bowl',emoji:'🍣',veg:false,desc:'A satisfying, balanced bowl.'},
-  {id:4,name:'Tomato soup & toast',emoji:'🍅',veg:true,desc:'Uncomplicated, familiar pairing.'},
-  {id:5,name:'Kimchi tofu bibimbap',emoji:'🥘',veg:true,desc:'A lively mix of textures and spice.'},
-  {id:6,name:'Chicken congee',emoji:'🥣',veg:false,desc:'A gentle, warming classic.'},
-  {id:7,name:'Falafel pita',emoji:'🥙',veg:true,desc:'Herby falafel and crisp vegetables.'},
-  {id:8,name:'Spicy chicken tacos',emoji:'🌮',veg:false,desc:'Bright toppings and a little heat.'},
-  {id:9,name:'Margherita Pizza',emoji:'🍕',veg:true,desc:'Classic cheese and tomato.'},
-  {id:10,name:'Beef Burger',emoji:'🍔',veg:false,desc:'Juicy patty with all the fixings.'},
-  {id:11,name:'Pad Thai',emoji:'🍝',veg:false,desc:'Sweet, sour, and savory noodles.'},
-  {id:12,name:'Sushi platter',emoji:'🍱',veg:false,desc:'Fresh assorted nigiri and maki.'},
-  {id:13,name:'Caesar salad',emoji:'🥗',veg:false,desc:'Crisp romaine with creamy dressing.'},
-  {id:14,name:'Spicy Ramen',emoji:'🍜',veg:false,desc:'Rich broth with a kick.'},
-  {id:15,name:'Pork Dumplings',emoji:'🥟',veg:false,desc:'Pan-fried and juicy.'},
-  {id:16,name:'Fried rice',emoji:'🍚',veg:false,desc:'Wok-tossed with egg and veggies.'},
-  {id:17,name:'Pasta Carbonara',emoji:'🍝',veg:false,desc:'Creamy, peppery, and rich.'},
-  {id:18,name:'Chocolate cake',emoji:'🍰',veg:true,desc:'Rich and decadent.'},
-  {id:19,name:'Matcha Ice cream',emoji:'🍦',veg:true,desc:'Earthy and sweet.'},
-  {id:20,name:'Bubble tea',emoji:'🧋',veg:true,desc:'Sweet milk tea with chewy pearls.'},
-  {id:21,name:'Blueberry muffin',emoji:'🧁',veg:true,desc:'Soft, sweet, and fruity.'},
-  {id:22,name:'Greek yogurt',emoji:'🥣',veg:true,desc:'Thick and creamy with honey.'},
-  {id:23,name:'Pancakes',emoji:'🥞',veg:true,desc:'Fluffy with maple syrup.'},
-  {id:24,name:'Steak',emoji:'🥩',veg:false,desc:'Perfectly seared.'},
-  {id:25,name:'Fish and Chips',emoji:'🐟',veg:false,desc:'Crispy battered fish.'},
-  {id:26,name:'Naan and Curry',emoji:'🍛',veg:true,desc:'Rich, spiced, and comforting.'},
-  {id:27,name:'Pho',emoji:'🍲',veg:false,desc:'Aromatic beef noodle soup.'},
-  {id:28,name:'Burrito bowl',emoji:'🌯',veg:false,desc:'Rice, beans, and fresh toppings.'},
-  {id:29,name:'Omelette',emoji:'🍳',veg:true,desc:'Fluffy eggs with veggies.'},
-  {id:30,name:'Smoothie bowl',emoji:'🥤',veg:true,desc:'Blended fruit with toppings.'}
+  {id:1,name:'Dim Sum Platter',emoji:'🥟',veg:false,desc:'A classic Cantonese comfort.'},
+  {id:2,name:'Wonton Noodles',emoji:'🍜',veg:false,desc:'Warm broth and savory dumplings.'},
+  {id:3,name:'Roast Goose Rice',emoji:'🦆',veg:false,desc:'Rich, crispy, and satisfying.'},
+  {id:4,name:'Pineapple Bun',emoji:'🍞',veg:true,desc:'Sweet, warm, and buttery.'},
+  {id:5,name:'Egg Tart',emoji:'🥧',veg:true,desc:'Flaky crust with silky custard.'},
+  {id:6,name:'HK Milk Tea',emoji:'🧋',veg:true,desc:'Smooth and perfectly brewed.'},
+  {id:7,name:'Beef Brisket Noodles',emoji:'🍜',veg:false,desc:'Tender beef and rich broth.'},
+  {id:8,name:'Claypot Rice',emoji:'🍚',veg:false,desc:'Comforting and savory.'},
+  {id:9,name:'Cheung Fun',emoji:'🥢',veg:true,desc:'Silky rice rolls.'},
+  {id:10,name:'Curry Fish Balls',emoji:'🍢',veg:false,desc:'Spicy and chewy.'},
+  {id:11,name:'Siu Mei Platter',emoji:'🍖',veg:false,desc:'Roasted meats.'},
+  {id:12,name:'HK French Toast',emoji:'🍞',veg:true,desc:'Sweet and crispy.'},
+  {id:13,name:'Red Bean Soup',emoji:'🍲',veg:true,desc:'Warm and sweet.'},
+  {id:14,name:'Mango Pomelo Sago',emoji:'🥭',veg:true,desc:'Refreshing dessert.'},
+  {id:15,name:'Sushi Platter',emoji:'🍣',veg:false,desc:'Fresh and balanced.'},
+  {id:16,name:'Spicy Ramen',emoji:'🍜',veg:false,desc:'Rich broth with a kick.'},
+  {id:17,name:'Pho',emoji:'🍲',veg:false,desc:'Aromatic beef noodle soup.'},
+  {id:18,name:'Pad Thai',emoji:'🍝',veg:false,desc:'Sweet, sour, and savory.'},
+  {id:19,name:'Korean BBQ',emoji:'🥩',veg:false,desc:'Grilled meat.'},
+  {id:20,name:'Kimchi Fried Rice',emoji:'🍚',veg:true,desc:'Spicy and tangy.'},
+  {id:21,name:'Mapo Tofu',emoji:'🌶️',veg:true,desc:'Silky tofu in spicy sauce.'},
+  {id:22,name:'Pork Dumplings',emoji:'🥟',veg:false,desc:'Juicy and pan-fried.'},
+  {id:23,name:'Miso Mushroom Noodles',emoji:'🍜',veg:true,desc:'Earthy and warming.'},
+  {id:24,name:'Sichuan Noodles',emoji:'🍜',veg:false,desc:'Numbing and spicy.'},
+  {id:25,name:'Bibimbap',emoji:'🥘',veg:true,desc:'Mixed rice with veggies.'},
+  {id:26,name:'Tempura Udon',emoji:'🍤',veg:false,desc:'Crispy tempura and noodles.'},
+  {id:27,name:'Gyoza',emoji:'🥟',veg:false,desc:'Pan-fried dumplings.'},
+  {id:28,name:'Tom Yum Soup',emoji:'🍲',veg:false,desc:'Spicy and sour.'},
+  {id:29,name:'Laksa',emoji:'🍜',veg:false,desc:'Rich coconut curry broth.'},
+  {id:30,name:'Nasi Goreng',emoji:'🍚',veg:false,desc:'Indonesian fried rice.'},
+  {id:31,name:'Banh Mi',emoji:'🥖',veg:false,desc:'Crusty baguette sandwich.'},
+  {id:32,name:'Yakitori',emoji:'🍢',veg:false,desc:'Grilled chicken skewers.'},
+  {id:33,name:'Katsu Curry',emoji:'🍛',veg:false,desc:'Crispy cutlet with curry.'},
+  {id:34,name:'Bulgogi Beef',emoji:'🥩',veg:false,desc:'Sweet and savory beef.'},
+  {id:35,name:'Egg Fried Rice',emoji:'🍚',veg:true,desc:'Simple and satisfying.'},
+  {id:36,name:'Vegetable Spring Rolls',emoji:'🥢',veg:true,desc:'Crispy and fresh.'},
+  {id:37,name:'Mango Sticky Rice',emoji:'🥭',veg:true,desc:'Sweet and creamy.'},
+  {id:38,name:'Margherita Pizza',emoji:'🍕',veg:true,desc:'Classic cheese and tomato.'},
+  {id:39,name:'Spaghetti Carbonara',emoji:'🍝',veg:false,desc:'Creamy, peppery, rich.'},
+  {id:40,name:'Beef Lasagna',emoji:'🧀',veg:false,desc:'Layered pasta and meat.'},
+  {id:41,name:'Mushroom Risotto',emoji:'🍚',veg:true,desc:'Creamy and earthy.'},
+  {id:42,name:'Caesar Salad',emoji:'🥗',veg:false,desc:'Crisp romaine.'},
+  {id:43,name:'Greek Salad',emoji:'🥗',veg:true,desc:'Fresh and tangy.'},
+  {id:44,name:'Falafel Pita',emoji:'🥙',veg:true,desc:'Herby falafel.'},
+  {id:45,name:'Cheeseburger',emoji:'🍔',veg:false,desc:'Juicy and cheesy.'},
+  {id:46,name:'Mac & Cheese',emoji:'🧀',veg:true,desc:'Rich and creamy.'},
+  {id:47,name:'Buffalo Wings',emoji:'🍗',veg:false,desc:'Spicy and crispy.'},
+  {id:48,name:'Hotdog',emoji:'🌭',veg:false,desc:'Classic street food.'},
+  {id:49,name:'Fried Chicken',emoji:'🍗',veg:false,desc:'Crispy and golden.'},
+  {id:50,name:'Fish and Chips',emoji:'🐟',veg:false,desc:'Battered fish and fries.'},
+  {id:51,name:'Steak',emoji:'🥩',veg:false,desc:'Perfectly seared.'},
+  {id:52,name:'BBQ Ribs',emoji:'🍖',veg:false,desc:'Smoky and tender.'},
+  {id:53,name:'Club Sandwich',emoji:'🥪',veg:false,desc:'Triple-decker classic.'},
+  {id:54,name:'Spaghetti & Meatballs',emoji:'🍝',veg:false,desc:'Hearty and classic.'},
+  {id:55,name:'Beef Tacos',emoji:'🌮',veg:false,desc:'Spicy and crunchy.'},
+  {id:56,name:'Chicken Burrito',emoji:'🌯',veg:false,desc:'Wrapped and stuffed.'},
+  {id:57,name:'Cheese Quesadilla',emoji:'🫓',veg:true,desc:'Toasted and melty.'},
+  {id:58,name:'Poutine',emoji:'🍟',veg:false,desc:'Fries, gravy, and curds.'},
+  {id:59,name:'Chicken Pot Pie',emoji:'🥧',veg:false,desc:'Creamy chicken filling.'},
+  {id:60,name:"Shepherd's Pie",emoji:'🍲',veg:false,desc:'Meat and mashed potatoes.'},
+  {id:61,name:'Grilled Cheese',emoji:'🥪',veg:true,desc:'Crispy and gooey.'},
+  {id:62,name:'BLT Sandwich',emoji:'🥪',veg:false,desc:'Bacon, lettuce, tomato.'},
+  {id:63,name:'Avocado Grain Bowl',emoji:'🥑',veg:true,desc:'Fresh greens and grains.'},
+  {id:64,name:'Salmon Rice Bowl',emoji:'🍣',veg:false,desc:'Balanced and satisfying.'},
+  {id:65,name:'Burrito Bowl',emoji:'🌯',veg:false,desc:'Rice, beans, toppings.'},
+  {id:66,name:'Smoothie Bowl',emoji:'🥤',veg:true,desc:'Blended fruit.'},
+  {id:67,name:'Greek Yogurt',emoji:'🥣',veg:true,desc:'Thick and creamy.'},
+  {id:68,name:'Omelette',emoji:'🍳',veg:true,desc:'Fluffy eggs and veggies.'},
+  {id:69,name:'Quinoa Salad',emoji:'🥗',veg:true,desc:'Light and protein-packed.'},
+  {id:70,name:'Tuna Poke Bowl',emoji:'🐟',veg:false,desc:'Fresh tuna and rice.'},
+  {id:71,name:'Grilled Chicken Breast',emoji:'🍗',veg:false,desc:'Lean and juicy.'},
+  {id:72,name:'Tofu Veggie Bowl',emoji:'🥘',veg:true,desc:'Plant-based and hearty.'},
+  {id:73,name:'Veggie Wrap',emoji:'🌯',veg:true,desc:'Fresh and portable.'},
+  {id:74,name:'Lentil Soup',emoji:'🍲',veg:true,desc:'Hearty and healthy.'},
+  {id:75,name:'Chia Seed Pudding',emoji:'🥣',veg:true,desc:'Light and refreshing.'},
+  {id:76,name:'Fruit Salad',emoji:'🍉',veg:true,desc:'Fresh and sweet.'},
+  {id:77,name:'Egg White Bites',emoji:'🥚',veg:true,desc:'High protein snack.'},
+  {id:78,name:'Tomato Soup & Toast',emoji:'🍅',veg:true,desc:'Simple and comforting.'},
+  {id:79,name:'Chicken Congee',emoji:'🥣',veg:false,desc:'Gentle and warming.'},
+  {id:80,name:'Clam Chowder',emoji:'🥣',veg:false,desc:'Creamy and rich.'},
+  {id:81,name:'Minestrone Soup',emoji:'🍲',veg:true,desc:'Hearty vegetable soup.'},
+  {id:82,name:'Chicken Noodle Soup',emoji:'🍜',veg:false,desc:'Classic comfort in a bowl.'},
+  {id:83,name:'Chocolate Cake',emoji:'🍰',veg:true,desc:'Rich and decadent.'},
+  {id:84,name:'Matcha Ice Cream',emoji:'🍦',veg:true,desc:'Earthy and sweet.'},
+  {id:85,name:'Bubble Tea',emoji:'🧋',veg:true,desc:'Sweet milk tea.'},
+  {id:86,name:'Blueberry Muffin',emoji:'🧁',veg:true,desc:'Soft and fruity.'},
+  {id:87,name:'Pancakes',emoji:'🥞',veg:true,desc:'Fluffy with syrup.'},
+  {id:88,name:'New York Cheesecake',emoji:'🍰',veg:true,desc:'Creamy and dense.'},
+  {id:89,name:'Fudge Brownie',emoji:'🍫',veg:true,desc:'Chocolatey and rich.'},
+  {id:90,name:'Apple Pie',emoji:'🥧',veg:true,desc:'Warm and spiced.'},
+  {id:91,name:'Glazed Donut',emoji:'🍩',veg:true,desc:'Sweet and fluffy.'},
+  {id:92,name:'Tiramisu',emoji:'🍰',veg:true,desc:'Coffee-flavored delight.'},
+  {id:93,name:'Creme Brulee',emoji:'🍮',veg:true,desc:'Silky custard.'},
+  {id:94,name:'Belgian Waffle',emoji:'🧇',veg:true,desc:'Crispy and golden.'},
+  {id:95,name:'Butter Croissant',emoji:'🥐',veg:true,desc:'Flaky and buttery.'},
+  {id:96,name:'Cinnamon Roll',emoji:'🥮',veg:true,desc:'Gooey and sweet.'},
+  {id:97,name:'Gelato',emoji:'🍨',veg:true,desc:'Italian ice cream.'},
+  {id:98,name:'Red Velvet Cake',emoji:'🧁',veg:true,desc:'Velvety and sweet.'},
+  {id:99,name:'Macarons',emoji:'🍪',veg:true,desc:'Delicate and colorful.'},
+  {id:100,name:'Churros',emoji:'🍩',veg:true,desc:'Crispy and sugary.'}
 ];
 
 let mood='stressed';
@@ -242,7 +310,9 @@ async function render(){
   mlBox.style.display = 'block';
   mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching context: Mood [${mood}], Time [${document.querySelector('#time').value}], Weather [${document.querySelector('#weather').value}]<br>> Connecting to Python API...`;
   document.querySelector('#results').innerHTML="";
-  document.querySelector('#resultIntro').textContent = "";
+  
+  // Keep the UI clean - no ML text
+  document.querySelector('#resultIntro').innerHTML = "";
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/recommendations`, {
@@ -261,9 +331,6 @@ async function render(){
     setTimeout(() => {
       mlBox.style.display = 'none';
       
-      // Show the ML logic text above the food
-      document.querySelector('#resultIntro').innerHTML = `<b>🧠 ML Engine:</b> ${resData.cluster_logic}`;
-
       document.querySelector('#results').innerHTML = resData.dishes.map(d=>`
         <article class="food">
           <div class="food-art">${d.emoji}</div>
