@@ -144,6 +144,15 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
     </div>
 
     <div id="resultIntro" class="micro" aria-live="polite"></div>
+    
+    <!-- Developer Buttons -->
+    <div style="margin-bottom: 15px; display:flex; gap:10px;">
+        <button id="dev-algo-btn" style="background: none; border: 1px solid #315a43; color: #315a43; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: none;">🛠️ View ML Engine Logic</button>
+        <button id="dev-db-btn" style="background: none; border: 1px solid #d88450; color: #d88450; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: none;">🛠️ View Live Database Rows</button>
+    </div>
+    <pre id="dev-algo-box" style="display:none; background:#1e1e1e; color:#a9b7c6; padding:15px; border-radius:8px; font-family:monospace; font-size:11px; text-align:left; line-height:1.5; margin-top:10px; white-space: pre-wrap; word-wrap: break-word;"></pre>
+    <pre id="dev-db-box" style="display:none; background:#2c1a14; color:#f2c7b1; padding:15px; border-radius:8px; font-family:monospace; font-size:11px; text-align:left; line-height:1.5; margin-top:10px; white-space: pre-wrap; word-wrap: break-word;"></pre>
+
     <div class="results" id="results"></div>
   </section>
 
@@ -184,9 +193,6 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 <div id="toast" role="status"></div>
 
 <script>
-// ==========================================
-// ✅ 你的 Render 链接已经填在这里了！
-// ==========================================
 const API_BASE_URL = "https://moodbite-backend-89pi.onrender.com"; 
 
 let myUserId = localStorage.getItem('moodbite_uid');
@@ -245,6 +251,12 @@ async function render(){
   mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching context: Mood [${mood}], Time [${document.querySelector('#time').value}], Weather [${document.querySelector('#weather').value}]<br>> Connecting to Python API...`;
   document.querySelector('#results').innerHTML="";
   document.querySelector('#resultIntro').textContent = "";
+  
+  // Hide the dev buttons when loading new moods
+  document.querySelector('#dev-algo-btn').style.display = 'none';
+  document.querySelector('#dev-algo-box').style.display = 'none';
+  document.querySelector('#dev-db-btn').style.display = 'none';
+  document.querySelector('#dev-db-box').style.display = 'none';
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/recommendations`, {
@@ -275,6 +287,46 @@ async function render(){
             </div>
           </div>
         </article>`).join('');
+
+      // Dev Mode Setup
+      const devBox = document.querySelector('#dev-algo-box');
+      const devBtn = document.querySelector('#dev-algo-btn');
+      devBox.textContent = JSON.stringify(resData, null, 2); 
+      devBtn.style.display = 'inline-block';
+      
+      devBtn.onclick = function() {
+          if (devBox.style.display === 'none') {
+              devBox.style.display = 'block';
+              this.innerHTML = '❌ Hide ML Engine Logic';
+          } else {
+              devBox.style.display = 'none';
+              this.innerHTML = '🛠️ View ML Engine Logic';
+          }
+      };
+
+      const dbBtn = document.querySelector('#dev-db-btn');
+      const dbBox = document.querySelector('#dev-db-box');
+      dbBtn.style.display = 'inline-block';
+      
+      dbBtn.onclick = async function() {
+          if (dbBox.style.display === 'none') {
+              dbBox.style.display = 'block';
+              dbBox.textContent = "Querying Neon PostgreSQL Database...";
+              this.innerHTML = '❌ Hide Database Rows';
+              
+              try {
+                  const dbResponse = await fetch(`${API_BASE_URL}/api/debug_database/${myUserId}`);
+                  const dbData = await dbResponse.json();
+                  dbBox.textContent = JSON.stringify(dbData, null, 2);
+              } catch (err) {
+                  dbBox.textContent = "Error connecting to database.";
+              }
+          } else {
+              dbBox.style.display = 'none';
+              this.innerHTML = '🛠️ View Live Database Rows';
+          }
+      };
+      
     }, 1000);
 
   } catch (error) {
@@ -326,7 +378,6 @@ document.querySelector('#results').onclick = e => {
   let dName = b.dataset.name;
   let loc = document.querySelector('#location').value.trim() || 'HKUST Hong Kong';
   
-  // 获取当前食物的 emoji
   let currentEmoji = '🍽️';
   let found = fallbackDishes.find(x => x.name === dName);
   if (found) currentEmoji = found.emoji;
@@ -334,11 +385,8 @@ document.querySelector('#results').onclick = e => {
   document.querySelector('#dialogBody').innerHTML=`
     <div style="font-size:60px; text-align:center; margin-bottom:15px;">${currentEmoji}</div>
     <h2 style="text-align:center; margin-top:0;">${dName}</h2>
-    <p style="color:var(--muted); font-size:14px; text-align:center; margin-bottom:25px;">
-      We don't handle delivery. We just help you find it.<br>Tap below to see restaurants serving this near <b>${loc}</b>.
-    </p>
     
-    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:#315a43; color:white; padding:15px; border-radius:12px; font-size:15px; font-weight:bold; text-decoration:none; margin-bottom:30px;">Find on Google Maps ↗</a>
+    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:#315a43; color:white; padding:15px; border-radius:12px; font-size:15px; font-weight:bold; text-decoration:none; margin-top:20px; margin-bottom:30px;">Find on Google Maps ↗</a>
 
     <hr style="border:0;border-top:1px solid #d9dfcf; margin:25px 0">
     <h3 style="font-size:16px; text-align:center; margin-bottom:10px;">Did it fit your mood?</h3>
