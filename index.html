@@ -58,12 +58,10 @@ footer{border-top:1px solid #dce0d2;max-width:1164px;margin:0 auto;padding:30px 
 dialog{border:0;border-radius:22px;padding:32px;max-width:550px;width:90%;color:var(--ink);background:var(--cream)}
 dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-size:30px}dialog p{font-size:13px}
 .close{float:right;background:none;border:0;font-size:24px}
-.rating{display:flex;gap:8px;margin-top:18px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1}
+.rating{display:flex;gap:8px;margin-top:18px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1;cursor:pointer;}
 .notice{font-size:11px;color:var(--muted)}
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10}
 .ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
-.api-box{background:#1e1e1e;color:#a9b7c6;padding:15px;border-radius:8px;font-family:monospace;font-size:12px;margin-top:15px;text-align:left;line-height:1.5;}
-.api-key{color:#cc7832;} .api-val{color:#6a8759;}
 @media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
 </style>
 </head>
@@ -328,28 +326,25 @@ document.querySelector('#results').onclick = e => {
   let dName = b.dataset.name;
   let loc = document.querySelector('#location').value.trim() || 'HKUST Hong Kong';
   
+  // 获取当前食物的 emoji
+  let currentEmoji = '🍽️';
+  let found = fallbackDishes.find(x => x.name === dName);
+  if (found) currentEmoji = found.emoji;
+
   document.querySelector('#dialogBody').innerHTML=`
-    <h2>${dName}</h2>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:15px;">Our backend queried the Restaurant API to find this near <b>${loc}</b>.</p>
+    <div style="font-size:60px; text-align:center; margin-bottom:15px;">${currentEmoji}</div>
+    <h2 style="text-align:center; margin-top:0;">${dName}</h2>
+    <p style="color:var(--muted); font-size:14px; text-align:center; margin-bottom:25px;">
+      We don't handle delivery. We just help you find it.<br>Tap below to see restaurants serving this near <b>${loc}</b>.
+    </p>
     
-        <!-- Clean Restaurant Card -->
-    <div style="background:white; border:1px solid #d9dfcf; border-radius:12px; padding:16px; margin-bottom:15px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <b style="font-size:16px;">The Campus Bistro</b>
-        <span style="background:#e9eddf; color:#315a43; font-size:10px; font-weight:bold; padding:4px 8px; border-radius:20px;">OPEN NOW</span>
-      </div>
-      <p style="margin:0 0 10px 0; font-size:12px; color:#717b6e;">📍 150m away · ⭐ 4.8 (120 reviews)</p>
-      <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:#315a43; color:white; padding:10px; border-radius:8px; font-size:12px; font-weight:bold; text-decoration:none;">Navigate with Google Maps ↗</a>
-    </div>
+    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:#315a43; color:white; padding:15px; border-radius:12px; font-size:15px; font-weight:bold; text-decoration:none; margin-bottom:30px;">Find on Google Maps ↗</a>
 
-    <div style="margin-top:20px;">
-      <a class="pill" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}">Open in Google Maps ↗</a>
-    </div>
-
-    <hr style="border:0;border-top:1px solid #d9dfcf;margin:25px 0">
-    <h3 style="font-size:16px">Did it fit your mood?</h3>
-    <p class="notice" style="margin-bottom:10px;">Your feedback trains the Collaborative Filtering model.</p>
-    <div class="rating">
+    <hr style="border:0;border-top:1px solid #d9dfcf; margin:25px 0">
+    <h3 style="font-size:16px; text-align:center; margin-bottom:10px;">Did it fit your mood?</h3>
+    <p class="notice" style="margin-bottom:15px; text-align:center;">Your feedback trains the Collaborative Filtering model.</p>
+    
+    <div class="rating" style="display:flex; gap:8px;">
       <button data-rate="yes" data-id="${b.dataset.find}" data-name="${dName}">😊 Perfect Match</button>
       <button data-rate="okay" data-id="${b.dataset.find}" data-name="${dName}">🙂 It was okay</button>
       <button data-rate="no" data-id="${b.dataset.find}" data-name="${dName}">😕 Too Heavy</button>
