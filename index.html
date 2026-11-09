@@ -36,12 +36,16 @@ h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1
 .mood span{font-size:29px;display:block;margin-bottom:12px}.mood b{font-size:12px}
 .filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px}
 .filters select,.filters input{border:1px solid #d6dccb;border-radius:8px;background:white;padding:10px;color:var(--ink)}
-.results{margin-top:28px}
-.top-pick{background:#fffdf7;border:2px solid var(--green);border-radius:18px;overflow:hidden;display:flex;margin-bottom:22px;box-shadow:0 8px 20px rgba(49,90,67,0.1);}
-.top-pick .food-art{width:40%;height:auto;font-size:120px; background:#e9e9d9; display:grid; place-items:center;}
-.top-pick .food-body{width:60%;padding:30px;display:flex;flex-direction:column;justify-content:center;}
+.results{margin-top:28px; transition: opacity 0.3s ease;}
+.results.loading { opacity: 0.5; pointer-events: none; }
+
+.top-pick{background:#fffdf7;border:2px solid var(--green);border-radius:18px;overflow:hidden;display:flex;flex-direction:row;margin-bottom:22px;box-shadow:0 8px 20px rgba(49,90,67,0.1);}
+.top-pick .food-art{flex:0 0 40%;height:auto;font-size:120px; background:#e9e9d9; display:grid; place-items:center;}
+.top-pick .food-body{flex:1;padding:30px;display:flex;flex-direction:column;justify-content:center;}
 .top-pick h3{font-family:Georgia,serif; font-size:36px; font-weight:normal; margin:10px 0 20px 0;}
 .top-pick .text-btn{font-size:14px; margin-right:15px;}
+
+/* FIX: Reverted to rigid 2-column layout */
 .alternatives{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
 .food{background:#fffdf7;border:1px solid #e4e5d9;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
 .food-art{height:175px;display:grid;place-items:center;font-size:86px;background:#e9e9d9}
@@ -67,7 +71,6 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10;text-align:center;}
 .ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
 
-/* Onboarding Modal Styling */
 .onboarding-list{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
 .onboarding-item{display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; border-radius:10px; border:1px solid #d9dfcf;}
 .onboarding-item span{font-size:14px; font-weight:bold;}
@@ -194,18 +197,16 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <div id="dialogBody"></div>
 </dialog>
 
-<!-- Onboarding Modal -->
 <dialog id="onboarding">
   <div style="text-align:center;">
     <div style="font-size:40px; margin-bottom:10px;">📝</div>
     <h2 style="font-family:Georgia, serif; margin-bottom:10px;">Build Your Taste Profile</h2>
     <p style="color:var(--muted); margin-bottom:15px;">We need to know your baseline preferences to give you hyper-personalized recommendations. Rate these 5 dishes to get started.</p>
     
-    <div class="onboarding-list" id="onboarding-list">
-      <!-- Populated by JS -->
-    </div>
+    <div class="onboarding-list" id="onboarding-list"></div>
     
     <button id="finish-onboarding" class="pill" style="margin-top: 25px; width: 100%; display: none;">Save Profile & Continue</button>
+    <button id="skip-onboarding" style="background:none; border:none; color:var(--muted); text-decoration:underline; margin-top:15px; cursor:pointer; font-size:12px;">Skip for now</button>
   </div>
 </dialog>
 
@@ -224,7 +225,6 @@ if (!myUserId) {
 let hasProfile = localStorage.getItem('moodbite_profile_built');
 let onboardingData = {};
 
-// 5 random foods for onboarding
 const onboardingFoods = [
     { dish: "Spicy Ramen", emoji: "🍜" },
     { dish: "Margherita Pizza", emoji: "🍕" },
@@ -255,14 +255,11 @@ function renderOnboarding() {
 }
 
 window.rateOnboard = function(dish, rating, btn) {
-    // Clear selections in this row
     let row = btn.parentElement;
     row.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-    
     onboardingData[dish] = rating;
     
-    // Show finish button if at least 3 rated
     if (Object.keys(onboardingData).length >= 3) {
         document.getElementById('finish-onboarding').style.display = 'block';
     }
@@ -270,7 +267,8 @@ window.rateOnboard = function(dish, rating, btn) {
 
 document.getElementById('finish-onboarding').onclick = async () => {
     let btn = document.getElementById('finish-onboarding');
-    btn.innerText = "Saving...";
+    let originalText = btn.innerText;
+    btn.innerText = "Saving (Backend waking up)...";
     btn.disabled = true;
     
     let payload = Object.keys(onboardingData).map(dish => ({
@@ -279,21 +277,32 @@ document.getElementById('finish-onboarding').onclick = async () => {
     }));
     
     try {
-        await fetch(`${API_BASE_URL}/api/onboarding`, {
+        const response = await fetch(`${API_BASE_URL}/api/onboarding`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ user_id: myUserId, ratings: payload })
         });
         
+        if (!response.ok) throw new Error("Server error");
+
+        hasProfile = true;
         localStorage.setItem('moodbite_profile_built', 'true');
         document.getElementById('onboarding').close();
         toast('✅ Profile built! Initializing personalized AI...');
         render();
     } catch (err) {
-        toast('⚠️ Failed to connect to backend.', true);
-        btn.innerText = "Save Profile & Continue";
+        console.error(err);
+        toast('⚠️ Failed to connect to backend. Try again.', true);
+        btn.innerText = originalText;
         btn.disabled = false;
     }
+};
+
+document.getElementById('skip-onboarding').onclick = () => {
+    hasProfile = true;
+    localStorage.setItem('moodbite_profile_built', 'true');
+    document.getElementById('onboarding').close();
+    render();
 };
 
 // --- MAIN APP LOGIC ---
@@ -320,7 +329,7 @@ function toast(t, isError = false){
 }
 
 async function render(){
-  if (!hasProfile) return; // Don't render until they finish onboarding
+  if (!hasProfile) return; 
 
   if (currentAbortController) currentAbortController.abort();
   currentAbortController = new AbortController();
@@ -330,8 +339,9 @@ async function render(){
   const mlBox = document.querySelector('#ml_status');
   mlBox.style.display = 'block';
   mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching user context...<br>> Connecting to Python API...`;
-  document.querySelector('#results').innerHTML="";
-  document.querySelector('#resultIntro').innerHTML = "";
+  
+  const resultsDiv = document.querySelector('#results');
+  resultsDiv.classList.add('loading'); 
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/recommendations`, {
@@ -348,95 +358,94 @@ async function render(){
     });
     const resData = await response.json();
     
-    setTimeout(() => {
-      if (!response.ok) return;
-      mlBox.style.display = 'none';
-      
-      let top = resData.dishes.top_pick;
-      let alts = resData.dishes.alternatives;
-      
-      let topHtml = `
-        <div class="top-pick">
-          <div class="food-art">${top.emoji}</div>
-          <div class="food-body">
-            <span class="tag">Top Pick for you / ${mood}</span>
-            <h3>${top.name}</h3>
-            <div class="row">
-              <div>
-                <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
-              </div>
-              <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
+    if (!response.ok) return;
+    mlBox.style.display = 'none';
+    resultsDiv.classList.remove('loading');
+    
+    let top = resData.dishes.top_pick;
+    let alts = resData.dishes.alternatives;
+    
+    let topHtml = `
+      <div class="top-pick">
+        <div class="food-art">${top.emoji}</div>
+        <div class="food-body">
+          <span class="tag">Top Pick for you / ${mood}</span>
+          <h3>${top.name}</h3>
+          <div class="row">
+            <div>
+              <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
             </div>
+            <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
           </div>
         </div>
-      `;
-      
-      let altsHtml = `
-        <div class="alternatives">
-          ${alts.map(d=>`
-            <article class="food">
-              <div class="food-art">${d.emoji}</div>
-              <div class="food-body">
-                <span class="tag">Alternative / ${mood}</span>
-                <h3>${d.name}</h3>
-                <div class="row">
-                  <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
-                  <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
-                </div>
+      </div>
+    `;
+    
+    let altsHtml = `
+      <div class="alternatives">
+        ${alts.map(d=>`
+          <article class="food">
+            <div class="food-art">${d.emoji}</div>
+            <div class="food-body">
+              <span class="tag">Alternative / ${mood}</span>
+              <h3>${d.name}</h3>
+              <div class="row">
+                <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
+                <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
               </div>
-            </article>
-          `).join('')}
-        </div>
-      `;
-      
-      document.querySelector('#results').innerHTML = topHtml + altsHtml;
-    }, 800);
+            </div>
+          </article>
+        `).join('')}
+      </div>
+    `;
+    
+    resultsDiv.innerHTML = topHtml + altsHtml;
+    document.querySelector('#resultIntro').innerHTML = ""; 
 
   } catch (error) {
     if (error.name === 'AbortError') return; 
     
-    setTimeout(() => {
-      mlBox.style.display = 'none';
-      toast("⚠️ Backend offline. Showing cached recommendations.", true);
-      
-      let shuffled = [...fallbackDishes].sort(() => 0.5 - Math.random());
-      let top = shuffled[0];
-      let alts = shuffled.slice(1, 3);
-      
-      let topHtml = `
-        <div class="top-pick">
-          <div class="food-art">${top.emoji}</div>
-          <div class="food-body">
-            <span class="tag">Top Pick (Offline) / ${mood}</span>
-            <h3>${top.name}</h3>
-            <div class="row">
-              <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
-              <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
-            </div>
+    mlBox.style.display = 'none';
+    resultsDiv.classList.remove('loading');
+    toast("⚠️ Backend offline. Showing cached recommendations.", true);
+    
+    let shuffled = [...fallbackDishes].sort(() => 0.5 - Math.random());
+    let top = shuffled[0];
+    let alts = shuffled.slice(1, 3);
+    
+    let topHtml = `
+      <div class="top-pick">
+        <div class="food-art">${top.emoji}</div>
+        <div class="food-body">
+          <span class="tag">Top Pick (Offline) / ${mood}</span>
+          <h3>${top.name}</h3>
+          <div class="row">
+            <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
+            <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
           </div>
         </div>
-      `;
-      
-      let altsHtml = `
-        <div class="alternatives">
-          ${alts.map(d=>`
-            <article class="food">
-              <div class="food-art">${d.emoji}</div>
-              <div class="food-body">
-                <span class="tag">Alternative / ${mood}</span>
-                <h3>${d.name}</h3>
-                <div class="row">
-                  <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
-                  <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
-                </div>
+      </div>
+    `;
+    
+    let altsHtml = `
+      <div class="alternatives">
+        ${alts.map(d=>`
+          <article class="food">
+            <div class="food-art">${d.emoji}</div>
+            <div class="food-body">
+              <span class="tag">Alternative / ${mood}</span>
+              <h3>${d.name}</h3>
+              <div class="row">
+                <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
+                <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
               </div>
-            </article>
-          `).join('')}
-        </div>
-      `;
-      
-      document.querySelector('#results').innerHTML = topHtml + altsHtml;
-    }, 500);
+            </div>
+          </article>
+        `).join('')}
+      </div>
+    `;
+    
+    resultsDiv.innerHTML = topHtml + altsHtml;
   }
 }
 
