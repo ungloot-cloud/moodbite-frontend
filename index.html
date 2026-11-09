@@ -60,9 +60,6 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 .notice{font-size:11px;color:var(--muted)}
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10;text-align:center;}
 .ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
-.restaurant-card{background:white; border:1px solid #d9dfcf; border-radius:12px; padding:16px; margin-bottom:10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
-.restaurant-name{font-weight:bold; font-size:15px; color:var(--green); margin-bottom:4px;}
-.restaurant-detail{font-size:12px; color:var(--muted); margin-bottom:8px;}
 @media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
 </style>
 </head>
@@ -141,7 +138,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
     <div id="ml_status" class="ml-box">
       > Initializing ML Engine...<br>
       > Fetching user context (Mood, Time, Weather)...<br>
-      > Running Cosine Similarity...
+      > Running Context-Aware Scoring...
     </div>
 
     <div id="resultIntro" class="micro" aria-live="polite"></div>
@@ -199,7 +196,7 @@ const fallbackDishes=[{id:1,name:'Dim Sum Platter',emoji:'🥟',veg:false,desc:'
 let mood='stressed';
 let data = JSON.parse(localStorage.getItem('moodbite')||'{}');
 data.saved ??= []; data.feedback ??= [];
-let currentAbortController = null; // For race condition fix
+let currentAbortController = null;
 
 function persist(){localStorage.setItem('moodbite',JSON.stringify(data));}
 function toast(t, isError = false){
@@ -211,7 +208,6 @@ function toast(t, isError = false){
 }
 
 async function render(){
-  // FIXED: Abort previous requests to prevent race conditions
   if (currentAbortController) currentAbortController.abort();
   currentAbortController = new AbortController();
 
@@ -221,12 +217,13 @@ async function render(){
   mlBox.style.display = 'block';
   mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching context: Mood [${mood}]...<br>> Connecting to Python API...`;
   document.querySelector('#results').innerHTML="";
-  
+  document.querySelector('#resultIntro').innerHTML = "";
+
   try {
     const response = await fetch(`${API_BASE_URL}/api/recommendations`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      signal: currentAbortController.signal, // Attach signal
+      signal: currentAbortController.signal,
       body: JSON.stringify({
         mood: mood, 
         diet: document.querySelector('#diet').value,
@@ -256,9 +253,8 @@ async function render(){
     }, 800);
 
   } catch (error) {
-    if (error.name === 'AbortError') return; // Ignore aborted requests
+    if (error.name === 'AbortError') return; 
     
-    // FIXED: Explicit error handling instead of silent fallback
     setTimeout(() => {
       mlBox.style.display = 'none';
       toast("⚠️ Backend offline. Showing cached recommendations.", true);
@@ -312,16 +308,28 @@ document.querySelector('#results').onclick = e => {
   let found = fallbackDishes.find(x => x.name === dName);
   if (found) currentEmoji = found.emoji;
 
-  // FIXED: Render loading state, then fetch real API data
   document.querySelector('#dialogBody').innerHTML=`
     <div style="font-size:60px; text-align:center; margin-bottom:15px;">${currentEmoji}</div>
     <h2 style="text-align:center; margin-top:0;">${dName}</h2>
-    <div id="api-loading" style="text-align:center; color:var(--muted); margin: 20px 0;">
-        <p>📡 Fetching nearby restaurants via Google Places API...</p>
-    </div>
-    <div id="api-results" style="display:none;"></div>
+    <p style="color:var(--muted); font-size:14px; text-align:center; margin-bottom:25px;">
+      We don't handle delivery. Tap below to find restaurants serving this near <b>${loc}</b>.
+    </p>
     
+    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:#315a43; color:white; padding:15px; border-radius:12px; font-size:15px; font-weight:bold; text-decoration:none; margin-bottom:30px;">Find on Google Maps ↗</a>
+
     <hr style="border:0;border-top:1px solid #d9dfcf; margin:25px 0">
+    
+    <h3 style="font-size:14px; text-align:center; margin-bottom:10px;">Help the Community (Crowdsourcing)</h3>
+    <p style="font-size:11px; color:var(--muted); text-align:center; margin-bottom:10px;">What category does this dish belong to?</p>
+    <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;">
+      <button class="tag-btn" data-tag="comfort" data-name="${dName}" style="border:1px solid #ccc; background:white; border-radius:15px; padding:6px 12px; font-size:11px; cursor:pointer;">🍔 Comfort</button>
+      <button class="tag-btn" data-tag="healthy" data-name="${dName}" style="border:1px solid #ccc; background:white; border-radius:15px; padding:6px 12px; font-size:11px; cursor:pointer;">🥗 Healthy</button>
+      <button class="tag-btn" data-tag="reward" data-name="${dName}" style="border:1px solid #ccc; background:white; border-radius:15px; padding:6px 12px; font-size:11px; cursor:pointer;">🍰 Reward</button>
+      <button class="tag-btn" data-tag="adventurous" data-name="${dName}" style="border:1px solid #ccc; background:white; border-radius:15px; padding:6px 12px; font-size:11px; cursor:pointer;">🌶️ Adventurous</button>
+    </div>
+
+    <hr style="border:0;border-top:1px solid #d9dfcf; margin:25px 0">
+
     <h3 style="font-size:16px; text-align:center; margin-bottom:10px;">Did it fit your mood?</h3>
     <p class="notice" style="margin-bottom:15px; text-align:center;">Your feedback trains the Collaborative Filtering model.</p>
     
@@ -331,42 +339,37 @@ document.querySelector('#results').onclick = e => {
       <button data-rate="no" data-id="${b.dataset.find}" data-name="${dName}">😕 Too Heavy</button>
     </div>`;
   document.querySelector('#meal').showModal();
-
-  // Make real API call to backend
-  fetch(`${API_BASE_URL}/api/restaurants`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ dish_name: dName, location: loc })
-  })
-  .then(res => res.json())
-  .then(data => {
-      document.querySelector('#api-loading').style.display = 'none';
-      const resultsDiv = document.querySelector('#api-results');
-      resultsDiv.style.display = 'block';
-      
-      if (data.results && data.results.length > 0) {
-          resultsDiv.innerHTML = `<p style="font-size:11px; color:var(--muted); margin-bottom:10px;">API Status: ${data.status} | Provider: ${data.api_provider}</p>` + 
-          data.results.map(r => `
-              <div class="restaurant-card">
-                  <div class="restaurant-name">${r.name}</div>
-                  <div class="restaurant-detail">📍 ${r.address} | ⭐ ${r.rating} | ${r.open_now ? '🟢 Open Now' : '🔴 Closed'}</div>
-                  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name+' '+loc)}" target="_blank" style="display:block; text-align:center; background:#315a43; color:white; padding:10px; border-radius:8px; font-size:12px; font-weight:bold; text-decoration:none; margin-top:10px;">Open in Maps ↗</a>
-              </div>
-          `).join('');
-      } else {
-          resultsDiv.innerHTML = `<p style="text-align:center; color:red;">No restaurants found nearby.</p>`;
-      }
-  })
-  .catch(err => {
-      document.querySelector('#api-loading').innerHTML = `<p style="text-align:center; color:red;">Failed to connect to API.</p>`;
-  });
 };
 
 document.querySelector('#dialogBody').onclick = async(e) => {
-  let b = e.target.closest('[data-rate]');
-  if(b){
-    let rating = b.dataset.rate;
-    let dName = b.dataset.name;
+  // Handle Crowdsourcing Tag Clicks
+  let tagBtn = e.target.closest('.tag-btn');
+  if (tagBtn) {
+      let tag = tagBtn.dataset.tag;
+      let dName = tagBtn.dataset.name;
+      
+      tagBtn.style.background = "var(--green)";
+      tagBtn.style.color = "white";
+      tagBtn.innerText = "✅ Tagged!";
+      
+      try {
+          await fetch(`${API_BASE_URL}/api/tag_food`, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ dish_name: dName, tag: tag, user_id: myUserId })
+          });
+          toast("✅ Tag saved to community database!");
+      } catch(err) {
+          toast("⚠️ Failed to save tag.", true);
+      }
+      return;
+  }
+
+  // Handle Rating Clicks
+  let rateBtn = e.target.closest('[data-rate]');
+  if(rateBtn){
+    let rating = rateBtn.dataset.rate;
+    let dName = rateBtn.dataset.name;
     
     toast("⏳ Updating User-Item Matrix...");
     
@@ -374,14 +377,14 @@ document.querySelector('#dialogBody').onclick = async(e) => {
       await fetch(`${API_BASE_URL}/api/feedback`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({dish_id: b.dataset.id, dish_name: dName, rating: rating, mood: mood, user_id: myUserId})
+        body: JSON.stringify({dish_id: rateBtn.dataset.id, dish_name: dName, rating: rating, mood: mood, user_id: myUserId})
       });
     } catch(err) {
         toast("⚠️ Failed to save feedback to database.", true);
     }
 
     setTimeout(() => {
-      data.feedback.push({id:b.dataset.id, mood, rating});
+      data.feedback.push({id:rateBtn.dataset.id, mood, rating});
       persist();
       document.querySelector('#meal').close();
       toast('✅ Feedback saved. Model retrained!');
