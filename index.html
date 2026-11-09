@@ -238,12 +238,14 @@ async function render(){
       if (!response.ok) return;
       mlBox.style.display = 'none';
       
+      // ONLY SHOW <p> IF THERE IS A DESCRIPTION
       document.querySelector('#results').innerHTML = resData.dishes.map(d=>`
         <article class="food">
           <div class="food-art">${d.emoji}</div>
           <div class="food-body">
             <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
-            <h3>${d.name}</h3><p>${d.desc}</p>
+            <h3>${d.name}</h3>
+            ${d.desc ? `<p>${d.desc}</p>` : ''} 
             <div class="row">
               <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find this nearby ↗</button>
               <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
@@ -267,7 +269,8 @@ async function render(){
           <div class="food-art">${d.emoji}</div>
           <div class="food-body">
             <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
-            <h3>${d.name}</h3><p>${d.desc}</p>
+            <h3>${d.name}</h3>
+            ${d.desc ? `<p>${d.desc}</p>` : ''}
             <div class="row">
               <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find this nearby ↗</button>
               <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
