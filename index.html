@@ -36,10 +36,16 @@ h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1
 .mood span{font-size:29px;display:block;margin-bottom:12px}.mood b{font-size:12px}
 .filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px}
 .filters select,.filters input{border:1px solid #d6dccb;border-radius:8px;background:white;padding:10px;color:var(--ink)}
-.results{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.results{margin-top:28px}
+.top-pick{background:#fffdf7;border:2px solid var(--green);border-radius:18px;overflow:hidden;display:flex;margin-bottom:22px;box-shadow:0 8px 20px rgba(49,90,67,0.1);}
+.top-pick .food-art{width:40%;height:auto;font-size:120px; background:#e9e9d9; display:grid; place-items:center;}
+.top-pick .food-body{width:60%;padding:30px;display:flex;flex-direction:column;justify-content:center;}
+.top-pick h3{font-family:Georgia,serif; font-size:36px; font-weight:normal; margin:10px 0 20px 0;}
+.top-pick .text-btn{font-size:14px; margin-right:15px;}
+.alternatives{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
 .food{background:#fffdf7;border:1px solid #e4e5d9;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
 .food-art{height:175px;display:grid;place-items:center;font-size:86px;background:#e9e9d9}
-.food:nth-child(2) .food-art{background:#efe0ce}.food:nth-child(3) .food-art{background:#e3e7db}
+.alternatives .food:nth-child(2) .food-art{background:#efe0ce}
 .food-body{padding:23px;flex-grow:1;display:flex;flex-direction:column}
 .tag{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#6e855b}
 .food h3{font-family:Georgia,serif;font-size:24px;font-weight:normal;margin:12px 0}
@@ -60,7 +66,16 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 .notice{font-size:11px;color:var(--muted)}
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10;text-align:center;}
 .ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
-@media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
+
+/* Onboarding Modal Styling */
+.onboarding-list{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
+.onboarding-item{display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; border-radius:10px; border:1px solid #d9dfcf;}
+.onboarding-item span{font-size:14px; font-weight:bold;}
+.onboarding-rating{display:flex; gap:5px;}
+.onboarding-rating button{border:1px solid #ccc; background:transparent; border-radius:5px; padding:8px 12px; cursor:pointer; font-size:16px; transition:0.2s;}
+.onboarding-rating button.selected{background:var(--green); color:white; border-color:var(--green);}
+
+@media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}.top-pick{flex-direction:column}.top-pick .food-art{width:100%; height:150px; font-size:80px;}.top-pick .food-body{width:100%; padding:20px;}.alternatives{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -137,11 +152,11 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 
     <div id="ml_status" class="ml-box">
       > Initializing ML Engine...<br>
-      > Fetching user context (Mood, Time, Weather)...<br>
+      > Fetching user context...<br>
       > Running Context-Aware Scoring...
     </div>
 
-    <div id="resultIntro" class="micro" aria-live="polite"></div>
+    <div id="resultIntro" class="micro" aria-live="polite" style="margin-bottom:15px;"></div>
     <div class="results" id="results"></div>
   </section>
 
@@ -179,6 +194,21 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <div id="dialogBody"></div>
 </dialog>
 
+<!-- Onboarding Modal -->
+<dialog id="onboarding">
+  <div style="text-align:center;">
+    <div style="font-size:40px; margin-bottom:10px;">📝</div>
+    <h2 style="font-family:Georgia, serif; margin-bottom:10px;">Build Your Taste Profile</h2>
+    <p style="color:var(--muted); margin-bottom:15px;">We need to know your baseline preferences to give you hyper-personalized recommendations. Rate these 5 dishes to get started.</p>
+    
+    <div class="onboarding-list" id="onboarding-list">
+      <!-- Populated by JS -->
+    </div>
+    
+    <button id="finish-onboarding" class="pill" style="margin-top: 25px; width: 100%; display: none;">Save Profile & Continue</button>
+  </div>
+</dialog>
+
 <div id="toast" role="status"></div>
 
 <script>
@@ -190,8 +220,90 @@ if (!myUserId) {
     localStorage.setItem('moodbite_uid', myUserId);
 }
 
+// --- ONBOARDING LOGIC ---
+let hasProfile = localStorage.getItem('moodbite_profile_built');
+let onboardingData = {};
+
+// 5 random foods for onboarding
+const onboardingFoods = [
+    { dish: "Spicy Ramen", emoji: "🍜" },
+    { dish: "Margherita Pizza", emoji: "🍕" },
+    { dish: "Avocado Grain Bowl", emoji: "🥑" },
+    { dish: "Cheeseburger", emoji: "🍔" },
+    { dish: "Sushi Platter", emoji: "🍣" }
+];
+
+if (!hasProfile) {
+    setTimeout(() => {
+        document.getElementById('onboarding').showModal();
+        renderOnboarding();
+    }, 1000);
+}
+
+function renderOnboarding() {
+    const list = document.getElementById('onboarding-list');
+    list.innerHTML = onboardingFoods.map(f => `
+        <div class="onboarding-item">
+            <span>${f.emoji} ${f.dish}</span>
+            <div class="onboarding-rating">
+                <button onclick="rateOnboard('${f.dish}', 5, this)">👍</button>
+                <button onclick="rateOnboard('${f.dish}', 3, this)">😐</button>
+                <button onclick="rateOnboard('${f.dish}', 1, this)">👎</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.rateOnboard = function(dish, rating, btn) {
+    // Clear selections in this row
+    let row = btn.parentElement;
+    row.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    
+    onboardingData[dish] = rating;
+    
+    // Show finish button if at least 3 rated
+    if (Object.keys(onboardingData).length >= 3) {
+        document.getElementById('finish-onboarding').style.display = 'block';
+    }
+}
+
+document.getElementById('finish-onboarding').onclick = async () => {
+    let btn = document.getElementById('finish-onboarding');
+    btn.innerText = "Saving...";
+    btn.disabled = true;
+    
+    let payload = Object.keys(onboardingData).map(dish => ({
+        dish: dish,
+        rating: onboardingData[dish]
+    }));
+    
+    try {
+        await fetch(`${API_BASE_URL}/api/onboarding`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ user_id: myUserId, ratings: payload })
+        });
+        
+        localStorage.setItem('moodbite_profile_built', 'true');
+        document.getElementById('onboarding').close();
+        toast('✅ Profile built! Initializing personalized AI...');
+        render();
+    } catch (err) {
+        toast('⚠️ Failed to connect to backend.', true);
+        btn.innerText = "Save Profile & Continue";
+        btn.disabled = false;
+    }
+};
+
+// --- MAIN APP LOGIC ---
 const moods=[['stressed','😮‍💨','Stressed'],['happy','😊','Happy'],['tired','😴','Tired'],['cozy','☺️','Cozy'],['adventurous','🤩','Adventurous'],['balanced','🌿','Balanced']];
-const fallbackDishes=[{id:1,name:'Dim Sum Platter',emoji:'🥟',veg:false,desc:'A classic Cantonese comfort.'},{id:2,name:'Wonton Noodles',emoji:'🍜',veg:false,desc:'Warm broth and savory dumplings.'},{id:3,name:'Roast Goose Rice',emoji:'🦆',veg:false,desc:'Rich, crispy, and satisfying.'},{id:4,name:'Pineapple Bun',emoji:'🍞',veg:true,desc:'Sweet, warm, and buttery.'},{id:5,name:'Egg Tart',emoji:'🥧',veg:true,desc:'Flaky crust with silky custard.'},{id:6,name:'HK Milk Tea',emoji:'🧋',veg:true,desc:'Smooth and perfectly brewed.'},{id:7,name:'Beef Brisket Noodles',emoji:'🍜',veg:false,desc:'Tender beef and rich broth.'},{id:8,name:'Claypot Rice',emoji:'🍚',veg:false,desc:'Comforting and savory.'},{id:9,name:'Cheung Fun',emoji:'🥢',veg:true,desc:'Silky rice rolls.'},{id:10,name:'Curry Fish Balls',emoji:'🍢',veg:false,desc:'Spicy and chewy.'},{id:11,name:'Siu Mei Platter',emoji:'🍖',veg:false,desc:'Roasted meats.'},{id:12,name:'HK French Toast',emoji:'🍞',veg:true,desc:'Sweet and crispy.'},{id:13,name:'Red Bean Soup',emoji:'🍲',veg:true,desc:'Warm and sweet.'},{id:14,name:'Mango Pomelo Sago',emoji:'🥭',veg:true,desc:'Refreshing dessert.'},{id:15,name:'Sushi Platter',emoji:'🍣',veg:false,desc:'Fresh and balanced.'},{id:16,name:'Spicy Ramen',emoji:'🍜',veg:false,desc:'Rich broth with a kick.'},{id:17,name:'Pho',emoji:'🍲',veg:false,desc:'Aromatic beef noodle soup.'},{id:18,name:'Pad Thai',emoji:'🍝',veg:false,desc:'Sweet, sour, and savory.'},{id:19,name:'Korean BBQ',emoji:'🥩',veg:false,desc:'Grilled meat.'},{id:20,name:'Kimchi Fried Rice',emoji:'🍚',veg:true,desc:'Spicy and tangy.'},{id:21,name:'Mapo Tofu',emoji:'🌶️',veg:true,desc:'Silky tofu in spicy sauce.'},{id:22,name:'Pork Dumplings',emoji:'🥟',veg:false,desc:'Juicy and pan-fried.'},{id:23,name:'Miso Mushroom Noodles',emoji:'🍜',veg:true,desc:'Earthy and warming.'},{id:24,name:'Sichuan Noodles',emoji:'🍜',veg:false,desc:'Numbing and spicy.'},{id:25,name:'Bibimbap',emoji:'🥘',veg:true,desc:'Mixed rice with veggies.'},{id:26,name:'Tempura Udon',emoji:'🍤',veg:false,desc:'Crispy tempura and noodles.'},{id:27,name:'Gyoza',emoji:'🥟',veg:false,desc:'Pan-fried dumplings.'},{id:28,name:'Tom Yum Soup',emoji:'🍲',veg:false,desc:'Spicy and sour.'},{id:29,name:'Laksa',emoji:'🍜',veg:false,desc:'Rich coconut curry broth.'},{id:30,name:'Nasi Goreng',emoji:'🍚',veg:false,desc:'Indonesian fried rice.'},{id:31,name:'Banh Mi',emoji:'🥖',veg:false,desc:'Crusty baguette sandwich.'},{id:32,name:'Yakitori',emoji:'🍢',veg:false,desc:'Grilled chicken skewers.'},{id:33,name:'Katsu Curry',emoji:'🍛',veg:false,desc:'Crispy cutlet with curry.'},{id:34,name:'Bulgogi Beef',emoji:'🥩',veg:false,desc:'Sweet and savory beef.'},{id:35,name:'Egg Fried Rice',emoji:'🍚',veg:true,desc:'Simple and satisfying.'},{id:36,name:'Vegetable Spring Rolls',emoji:'🥢',veg:true,desc:'Crispy and fresh.'},{id:37,name:'Mango Sticky Rice',emoji:'🥭',veg:true,desc:'Sweet and creamy.'},{id:38,name:'Margherita Pizza',emoji:'🍕',veg:true,desc:'Classic cheese and tomato.'},{id:39,name:'Spaghetti Carbonara',emoji:'🍝',veg:false,desc:'Creamy, peppery, rich.'},{id:40,name:'Beef Lasagna',emoji:'🧀',veg:false,desc:'Layered pasta and meat.'},{id:41,name:'Mushroom Risotto',emoji:'🍚',veg:true,desc:'Creamy and earthy.'},{id:42,name:'Caesar Salad',emoji:'🥗',veg:false,desc:'Crisp romaine.'},{id:43,name:'Greek Salad',emoji:'🥗',veg:true,desc:'Fresh and tangy.'},{id:44,name:'Falafel Pita',emoji:'🥙',veg:true,desc:'Herby falafel.'},{id:45,name:'Cheeseburger',emoji:'🍔',veg:false,desc:'Juicy and cheesy.'},{id:46,name:'Mac & Cheese',emoji:'🧀',veg:true,desc:'Rich and creamy.'},{id:47,name:'Buffalo Wings',emoji:'🍗',veg:false,desc:'Spicy and crispy.'},{id:48,name:'Hotdog',emoji:'🌭',veg:false,desc:'Classic street food.'},{id:49,name:'Fried Chicken',emoji:'🍗',veg:false,desc:'Crispy and golden.'},{id:50,name:'Fish and Chips',emoji:'🐟',veg:false,desc:'Battered fish and fries.'},{id:51,name:'Steak',emoji:'🥩',veg:false,desc:'Perfectly seared.'},{id:52,name:'BBQ Ribs',emoji:'🍖',veg:false,desc:'Smoky and tender.'},{id:53,name:'Club Sandwich',emoji:'🥪',veg:false,desc:'Triple-decker classic.'},{id:54,name:'Spaghetti & Meatballs',emoji:'🍝',veg:false,desc:'Hearty and classic.'},{id:55,name:'Beef Tacos',emoji:'🌮',veg:false,desc:'Spicy and crunchy.'},{id:56,name:'Chicken Burrito',emoji:'🌯',veg:false,desc:'Wrapped and stuffed.'},{id:57,name:'Cheese Quesadilla',emoji:'🫓',veg:true,desc:'Toasted and melty.'},{id:58,name:'Poutine',emoji:'🍟',veg:false,desc:'Fries, gravy, and curds.'},{id:59,name:'Chicken Pot Pie',emoji:'🥧',veg:false,desc:'Creamy chicken filling.'},{id:60,name:"Shepherd's Pie",emoji:'🍲',veg:false,desc:'Meat and mashed potatoes.'},{id:61,name:'Grilled Cheese',emoji:'🥪',veg:true,desc:'Crispy and gooey.'},{id:62,name:'BLT Sandwich',emoji:'🥪',veg:false,desc:'Bacon, lettuce, tomato.'},{id:63,name:'Avocado Grain Bowl',emoji:'🥑',veg:true,desc:'Fresh greens and grains.'},{id:64,name:'Salmon Rice Bowl',emoji:'🍣',veg:false,desc:'Balanced and satisfying.'},{id:65,name:'Burrito Bowl',emoji:'🌯',veg:false,desc:'Rice, beans, toppings.'},{id:66,name:'Smoothie Bowl',emoji:'🥤',veg:true,desc:'Blended fruit.'},{id:67,name:'Greek Yogurt',emoji:'🥣',veg:true,desc:'Thick and creamy.'},{id:68,name:'Omelette',emoji:'🍳',veg:true,desc:'Fluffy eggs and veggies.'},{id:69,name:'Quinoa Salad',emoji:'🥗',veg:true,desc:'Light and protein-packed.'},{id:70,name:'Tuna Poke Bowl',emoji:'🐟',veg:false,desc:'Fresh tuna and rice.'},{id:71,name:'Grilled Chicken Breast',emoji:'🍗',veg:false,desc:'Lean and juicy.'},{id:72,name:'Tofu Veggie Bowl',emoji:'🥘',veg:true,desc:'Plant-based and hearty.'},{id:73,name:'Veggie Wrap',emoji:'🌯',veg:true,desc:'Fresh and portable.'},{id:74,name:'Lentil Soup',emoji:'🍲',veg:true,desc:'Hearty and healthy.'},{id:75,name:'Chia Seed Pudding',emoji:'🥣',veg:true,desc:'Light and refreshing.'},{id:76,name:'Fruit Salad',emoji:'🍉',veg:true,desc:'Fresh and sweet.'},{id:77,name:'Egg White Bites',emoji:'🥚',veg:true,desc:'High protein snack.'},{id:78,name:'Tomato Soup & Toast',emoji:'🍅',veg:true,desc:'Simple and comforting.'},{id:79,name:'Chicken Congee',emoji:'🥣',veg:false,desc:'Gentle and warming.'},{id:80,name:'Clam Chowder',emoji:'🥣',veg:false,desc:'Creamy and rich.'},{id:81,name:'Minestrone Soup',emoji:'🍲',veg:true,desc:'Hearty vegetable soup.'},{id:82,name:'Chicken Noodle Soup',emoji:'🍜',veg:false,desc:'Classic comfort in a bowl.'},{id:83,name:'Chocolate Cake',emoji:'🍰',veg:true,desc:'Rich and decadent.'},{id:84,name:'Matcha Ice Cream',emoji:'🍦',veg:true,desc:'Earthy and sweet.'},{id:85,name:'Bubble Tea',emoji:'🧋',veg:true,desc:'Sweet milk tea.'},{id:86,name:'Blueberry Muffin',emoji:'🧁',veg:true,desc:'Soft and fruity.'},{id:87,name:'Pancakes',emoji:'🥞',veg:true,desc:'Fluffy with syrup.'},{id:88,name:'New York Cheesecake',emoji:'🍰',veg:true,desc:'Creamy and dense.'},{id:89,name:'Fudge Brownie',emoji:'🍫',veg:true,desc:'Chocolatey and rich.'},{id:90,name:'Apple Pie',emoji:'🥧',veg:true,desc:'Warm and spiced.'},{id:91,name:'Glazed Donut',emoji:'🍩',veg:true,desc:'Sweet and fluffy.'},{id:92,name:'Tiramisu',emoji:'🍰',veg:true,desc:'Coffee-flavored delight.'},{id:93,name:'Creme Brulee',emoji:'🍮',veg:true,desc:'Silky custard.'},{id:94,name:'Belgian Waffle',emoji:'🧇',veg:true,desc:'Crispy and golden.'},{id:95,name:'Butter Croissant',emoji:'🥐',veg:true,desc:'Flaky and buttery.'},{id:96,name:'Cinnamon Roll',emoji:'🥮',veg:true,desc:'Gooey and sweet.'},{id:97,name:'Gelato',emoji:'🍨',veg:true,desc:'Italian ice cream.'},{id:98,name:'Red Velvet Cake',emoji:'🧁',veg:true,desc:'Velvety and sweet.'},{id:99,name:'Macarons',emoji:'🍪',veg:true,desc:'Delicate and colorful.'},{id:100,name:'Churros',emoji:'🍩',veg:true,desc:'Crispy and sugary.'}];
+const fallbackDishes=[
+  {id:1,name:'Dim Sum Platter',emoji:'🥟',veg:false,desc:'A classic Cantonese comfort.'},
+  {id:2,name:'Wonton Noodles',emoji:'🍜',veg:false,desc:'Warm broth and savory dumplings.'},
+  {id:4,name:'Pineapple Bun',emoji:'🍞',veg:true,desc:'Sweet, warm, and buttery.'},
+  {id:15,name:'Sushi Platter',emoji:'🍣',veg:false,desc:'Fresh and balanced.'}
+];
 
 let mood='stressed';
 let data = JSON.parse(localStorage.getItem('moodbite')||'{}');
@@ -208,6 +320,8 @@ function toast(t, isError = false){
 }
 
 async function render(){
+  if (!hasProfile) return; // Don't render until they finish onboarding
+
   if (currentAbortController) currentAbortController.abort();
   currentAbortController = new AbortController();
 
@@ -215,7 +329,7 @@ async function render(){
   
   const mlBox = document.querySelector('#ml_status');
   mlBox.style.display = 'block';
-  mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching context: Mood [${mood}]...<br>> Connecting to Python API...`;
+  mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching user context...<br>> Connecting to Python API...`;
   document.querySelector('#results').innerHTML="";
   document.querySelector('#resultIntro').innerHTML = "";
 
@@ -238,20 +352,44 @@ async function render(){
       if (!response.ok) return;
       mlBox.style.display = 'none';
       
-      // ONLY SHOW <p> IF THERE IS A DESCRIPTION
-      document.querySelector('#results').innerHTML = resData.dishes.map(d=>`
-        <article class="food">
-          <div class="food-art">${d.emoji}</div>
+      let top = resData.dishes.top_pick;
+      let alts = resData.dishes.alternatives;
+      
+      let topHtml = `
+        <div class="top-pick">
+          <div class="food-art">${top.emoji}</div>
           <div class="food-body">
-            <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
-            <h3>${d.name}</h3>
-            ${d.desc ? `<p>${d.desc}</p>` : ''} 
+            <span class="tag">Top Pick for you / ${mood}</span>
+            <h3>${top.name}</h3>
             <div class="row">
-              <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find this nearby ↗</button>
-              <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
+              <div>
+                <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
+              </div>
+              <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
             </div>
           </div>
-        </article>`).join('');
+        </div>
+      `;
+      
+      let altsHtml = `
+        <div class="alternatives">
+          ${alts.map(d=>`
+            <article class="food">
+              <div class="food-art">${d.emoji}</div>
+              <div class="food-body">
+                <span class="tag">Alternative / ${mood}</span>
+                <h3>${d.name}</h3>
+                <div class="row">
+                  <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
+                  <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
+                </div>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      `;
+      
+      document.querySelector('#results').innerHTML = topHtml + altsHtml;
     }, 800);
 
   } catch (error) {
@@ -262,21 +400,42 @@ async function render(){
       toast("⚠️ Backend offline. Showing cached recommendations.", true);
       
       let shuffled = [...fallbackDishes].sort(() => 0.5 - Math.random());
-      let picks = shuffled.slice(0, 3);
+      let top = shuffled[0];
+      let alts = shuffled.slice(1, 3);
       
-      document.querySelector('#results').innerHTML = picks.map(d=>`
-        <article class="food">
-          <div class="food-art">${d.emoji}</div>
+      let topHtml = `
+        <div class="top-pick">
+          <div class="food-art">${top.emoji}</div>
           <div class="food-body">
-            <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
-            <h3>${d.name}</h3>
-            ${d.desc ? `<p>${d.desc}</p>` : ''}
+            <span class="tag">Top Pick (Offline) / ${mood}</span>
+            <h3>${top.name}</h3>
             <div class="row">
-              <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find this nearby ↗</button>
-              <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
+              <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
+              <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
             </div>
           </div>
-        </article>`).join('');
+        </div>
+      `;
+      
+      let altsHtml = `
+        <div class="alternatives">
+          ${alts.map(d=>`
+            <article class="food">
+              <div class="food-art">${d.emoji}</div>
+              <div class="food-body">
+                <span class="tag">Alternative / ${mood}</span>
+                <h3>${d.name}</h3>
+                <div class="row">
+                  <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
+                  <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
+                </div>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      `;
+      
+      document.querySelector('#results').innerHTML = topHtml + altsHtml;
     }, 500);
   }
 }
@@ -315,15 +474,15 @@ document.querySelector('#results').onclick = e => {
     <div style="font-size:60px; text-align:center; margin-bottom:10px;">${currentEmoji}</div>
     <h2 style="text-align:center; margin-top:0; margin-bottom:20px;">${dName}</h2>
     
-    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:#315a43; color:white; padding:15px; border-radius:12px; font-size:15px; font-weight:bold; text-decoration:none; margin-bottom:30px;">Find restaurants on Google Maps ↗</a>
+    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:var(--green); color:white; padding:15px; border-radius:12px; font-size:15px; font-weight:bold; text-decoration:none; margin-bottom:30px;">Find restaurants on Google Maps ↗</a>
 
     <hr style="border:0;border-top:1px solid #d9dfcf; margin:20px 0">
 
     <h3 style="font-size:15px; text-align:center; margin-bottom:5px; font-family:Georgia, serif;">Did it fit your mood?</h3>
     <p class="notice" style="margin-bottom:15px; text-align:center;">Your feedback trains the Collaborative Filtering model.</p>
     <div class="rating" style="display:flex; gap:8px;">
-      <button data-rate="yes" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">😊 Perfect Match</button>
-      <button data-rate="okay" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">🙂 It was okay</button>
+      <button data-rate="yes" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">😊 Perfect</button>
+      <button data-rate="okay" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">🙂 Okay</button>
       <button data-rate="no" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">😕 Too Heavy</button>
     </div>
 
@@ -341,7 +500,6 @@ document.querySelector('#results').onclick = e => {
 };
 
 document.querySelector('#dialogBody').onclick = async(e) => {
-  // Handle Crowdsourcing Tag Clicks
   let tagBtn = e.target.closest('.tag-btn');
   if (tagBtn) {
       let tag = tagBtn.dataset.tag;
@@ -364,7 +522,6 @@ document.querySelector('#dialogBody').onclick = async(e) => {
       return;
   }
 
-  // Handle Rating Clicks
   let rateBtn = e.target.closest('[data-rate]');
   if(rateBtn){
     let rating = rateBtn.dataset.rate;
