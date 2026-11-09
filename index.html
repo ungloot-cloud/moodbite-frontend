@@ -36,20 +36,11 @@ h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1
 .mood span{font-size:29px;display:block;margin-bottom:12px}.mood b{font-size:12px}
 .filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px}
 .filters select,.filters input{border:1px solid #d6dccb;border-radius:8px;background:white;padding:10px;color:var(--ink)}
-.results{margin-top:28px; transition: opacity 0.3s ease;}
+.results{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px; transition: opacity 0.3s ease;}
 .results.loading { opacity: 0.5; pointer-events: none; }
-
-.top-pick{background:#fffdf7;border:2px solid var(--green);border-radius:18px;overflow:hidden;display:flex;flex-direction:row;margin-bottom:22px;box-shadow:0 8px 20px rgba(49,90,67,0.1);}
-.top-pick .food-art{flex:0 0 40%;height:auto;font-size:120px; background:#e9e9d9; display:grid; place-items:center;}
-.top-pick .food-body{flex:1;padding:30px;display:flex;flex-direction:column;justify-content:center;}
-.top-pick h3{font-family:Georgia,serif; font-size:36px; font-weight:normal; margin:10px 0 20px 0;}
-.top-pick .text-btn{font-size:14px; margin-right:15px;}
-
-/* FIX: Reverted to rigid 2-column layout */
-.alternatives{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
 .food{background:#fffdf7;border:1px solid #e4e5d9;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
 .food-art{height:175px;display:grid;place-items:center;font-size:86px;background:#e9e9d9}
-.alternatives .food:nth-child(2) .food-art{background:#efe0ce}
+.food:nth-child(2) .food-art{background:#efe0ce}.food:nth-child(3) .food-art{background:#e3e7db}
 .food-body{padding:23px;flex-grow:1;display:flex;flex-direction:column}
 .tag{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#6e855b}
 .food h3{font-family:Georgia,serif;font-size:24px;font-weight:normal;margin:12px 0}
@@ -69,7 +60,9 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 .rating{display:flex;gap:8px;margin-top:10px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1;cursor:pointer;}
 .notice{font-size:11px;color:var(--muted)}
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10;text-align:center;}
-.ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
+
+/* CLEANED UP THE LOADING BOX CLASS */
+.loading-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-size:13px;color:#315a43;display:none; text-align:center; font-weight:bold;}
 
 .onboarding-list{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
 .onboarding-item{display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; border-radius:10px; border:1px solid #d9dfcf;}
@@ -78,7 +71,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 .onboarding-rating button{border:1px solid #ccc; background:transparent; border-radius:5px; padding:8px 12px; cursor:pointer; font-size:16px; transition:0.2s;}
 .onboarding-rating button.selected{background:var(--green); color:white; border-color:var(--green);}
 
-@media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}.top-pick{flex-direction:column}.top-pick .food-art{width:100%; height:150px; font-size:80px;}.top-pick .food-body{width:100%; padding:20px;}.alternatives{grid-template-columns:1fr;}}
+@media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
@@ -122,7 +115,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <section class="section" id="discover">
     <div class="section-head">
       <div class="eyebrow">01 / Check in with yourself</div>
-      <div class="notice">Interactive concept · AI backend connected</div>
+      <div class="notice">Interactive concept · Recommendations tailored for you</div>
     </div>
     <h2>How are you feeling?</h2>
     <p style="color:var(--muted);font-size:14px">No right or wrong answer. Just a starting point for something delicious.</p>
@@ -153,10 +146,10 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       <button class="text-btn" id="shuffle">Something different ↻</button>
     </div>
 
-    <div id="ml_status" class="ml-box">
-      > Initializing ML Engine...<br>
-      > Fetching user context...<br>
-      > Running Context-Aware Scoring...
+    <!-- CLEANED LOADING TEXT -->
+    <div id="loading_box" class="loading-box">
+      🍽️ Finding the perfect bite for your mood...<br>
+      ✨ Scanning local favorites...
     </div>
 
     <div id="resultIntro" class="micro" aria-live="polite" style="margin-bottom:15px;"></div>
@@ -173,9 +166,9 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       </div>
       <div class="steps">
         <article><span class="num">01</span><div><h3>Tell us how you feel</h3><p>Select your mood and context. Every moment can be different.</p></div></article>
-        <article><span class="num">02</span><div><h3>Meet your next bite</h3><p>Our ML engine clusters your context and predicts your next favorite dish.</p></div></article>
-        <article><span class="num">03</span><div><h3>Find it nearby</h3><p>Use our Restaurant API to find exactly where to get it on campus.</p></div></article>
-        <article><span class="num">04</span><div><h3>Reflect after your meal</h3><p>Rate your meal. This updates the User-Item Matrix to personalize future recommendations.</p></div></article>
+        <article><span class="num">02</span><div><h3>Meet your next bite</h3><p>We learn your tastes and suggest dishes that match exactly how you feel.</p></div></article>
+        <article><span class="num">03</span><div><h3>Find it nearby</h3><p>Use our map integration to find exactly where to get it on campus.</p></div></article>
+        <article><span class="num">04</span><div><h3>Reflect after your meal</h3><p>Rate your meal. This helps us personalize your future recommendations.</p></div></article>
       </div>
     </div>
   </section>
@@ -268,7 +261,7 @@ window.rateOnboard = function(dish, rating, btn) {
 document.getElementById('finish-onboarding').onclick = async () => {
     let btn = document.getElementById('finish-onboarding');
     let originalText = btn.innerText;
-    btn.innerText = "Saving (Backend waking up)...";
+    btn.innerText = "Saving...";
     btn.disabled = true;
     
     let payload = Object.keys(onboardingData).map(dish => ({
@@ -288,11 +281,11 @@ document.getElementById('finish-onboarding').onclick = async () => {
         hasProfile = true;
         localStorage.setItem('moodbite_profile_built', 'true');
         document.getElementById('onboarding').close();
-        toast('✅ Profile built! Initializing personalized AI...');
+        toast('✅ Profile saved! Finding your first matches...');
         render();
     } catch (err) {
         console.error(err);
-        toast('⚠️ Failed to connect to backend. Try again.', true);
+        toast('⚠️ Failed to connect. Please try again.', true);
         btn.innerText = originalText;
         btn.disabled = false;
     }
@@ -336,9 +329,8 @@ async function render(){
 
   document.querySelector('#moods').innerHTML=moods.map(([id,e,n])=>`<button class="mood ${mood===id?'active':''}" data-mood="${id}"><span>${e}</span><b>${n}</b></button>`).join('');
   
-  const mlBox = document.querySelector('#ml_status');
-  mlBox.style.display = 'block';
-  mlBox.innerHTML = `> Initializing ML Engine...<br>> Fetching user context...<br>> Connecting to Python API...`;
+  const loadingBox = document.querySelector('#loading_box');
+  loadingBox.style.display = 'block';
   
   const resultsDiv = document.querySelector('#results');
   resultsDiv.classList.add('loading'); 
@@ -359,93 +351,46 @@ async function render(){
     const resData = await response.json();
     
     if (!response.ok) return;
-    mlBox.style.display = 'none';
+    loadingBox.style.display = 'none';
     resultsDiv.classList.remove('loading');
     
-    let top = resData.dishes.top_pick;
-    let alts = resData.dishes.alternatives;
-    
-    let topHtml = `
-      <div class="top-pick">
-        <div class="food-art">${top.emoji}</div>
+    resultsDiv.innerHTML = resData.dishes.map(d=>`
+      <article class="food">
+        <div class="food-art">${d.emoji}</div>
         <div class="food-body">
-          <span class="tag">Top Pick for you / ${mood}</span>
-          <h3>${top.name}</h3>
+          <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
+          <h3>${d.name}</h3>
           <div class="row">
-            <div>
-              <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
-            </div>
-            <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
+            <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
+            <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
           </div>
         </div>
-      </div>
-    `;
-    
-    let altsHtml = `
-      <div class="alternatives">
-        ${alts.map(d=>`
-          <article class="food">
-            <div class="food-art">${d.emoji}</div>
-            <div class="food-body">
-              <span class="tag">Alternative / ${mood}</span>
-              <h3>${d.name}</h3>
-              <div class="row">
-                <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
-                <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
-              </div>
-            </div>
-          </article>
-        `).join('')}
-      </div>
-    `;
-    
-    resultsDiv.innerHTML = topHtml + altsHtml;
+      </article>`).join('');
+      
     document.querySelector('#resultIntro').innerHTML = ""; 
 
   } catch (error) {
     if (error.name === 'AbortError') return; 
     
-    mlBox.style.display = 'none';
+    loadingBox.style.display = 'none';
     resultsDiv.classList.remove('loading');
-    toast("⚠️ Backend offline. Showing cached recommendations.", true);
+    toast("⚠️ Network unstable. Showing cached favorites.", true);
     
     let shuffled = [...fallbackDishes].sort(() => 0.5 - Math.random());
-    let top = shuffled[0];
-    let alts = shuffled.slice(1, 3);
+    let picks = shuffled.slice(0, 3);
     
-    let topHtml = `
-      <div class="top-pick">
-        <div class="food-art">${top.emoji}</div>
+    resultsDiv.innerHTML = picks.map(d=>`
+      <article class="food">
+        <div class="food-art">${d.emoji}</div>
         <div class="food-body">
-          <span class="tag">Top Pick (Offline) / ${mood}</span>
-          <h3>${top.name}</h3>
+          <span class="tag">${d.veg?'Vegetarian':'Classic'} / ${mood}</span>
+          <h3>${d.name}</h3>
           <div class="row">
-            <button class="text-btn" data-find="${top.id}" data-name="${top.name}">Find nearby ↗</button>
-            <button class="save" data-save="${top.id}">${data.saved.includes(top.id)?'♥':'♡'}</button>
+            <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
+            <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
           </div>
         </div>
-      </div>
-    `;
-    
-    let altsHtml = `
-      <div class="alternatives">
-        ${alts.map(d=>`
-          <article class="food">
-            <div class="food-art">${d.emoji}</div>
-            <div class="food-body">
-              <span class="tag">Alternative / ${mood}</span>
-              <h3>${d.name}</h3>
-              <div class="row">
-                <button class="text-btn" data-find="${d.id}" data-name="${d.name}">Find nearby ↗</button>
-                <button class="save" data-save="${d.id}">${data.saved.includes(d.id)?'♥':'♡'}</button>
-              </div>
-            </div>
-          </article>
-        `).join('')}
-      </div>
-    `;
-    
-    resultsDiv.innerHTML = topHtml + altsHtml;
+      </article>`).join('');
   }
 }
 
@@ -488,7 +433,7 @@ document.querySelector('#results').onclick = e => {
     <hr style="border:0;border-top:1px solid #d9dfcf; margin:20px 0">
 
     <h3 style="font-size:15px; text-align:center; margin-bottom:5px; font-family:Georgia, serif;">Did it fit your mood?</h3>
-    <p class="notice" style="margin-bottom:15px; text-align:center;">Your feedback trains the Collaborative Filtering model.</p>
+    <p class="notice" style="margin-bottom:15px; text-align:center;">Your feedback helps us recommend better dishes for you.</p>
     <div class="rating" style="display:flex; gap:8px;">
       <button data-rate="yes" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">😊 Perfect</button>
       <button data-rate="okay" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">🙂 Okay</button>
@@ -498,7 +443,7 @@ document.querySelector('#results').onclick = e => {
     <hr style="border:0;border-top:1px solid #d9dfcf; margin:20px 0">
 
     <h3 style="font-size:15px; text-align:center; margin-bottom:5px; font-family:Georgia, serif;">Help the Community</h3>
-    <p class="notice" style="margin-bottom:15px; text-align:center;">Tag this dish to help train our unbiased AI.</p>
+    <p class="notice" style="margin-bottom:15px; text-align:center;">Tag this dish to help us improve recommendations for everyone.</p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
       <button class="tag-btn" data-tag="comfort" data-name="${dName}" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc; background:white; font-size:12px; cursor:pointer;">🍔 Comfort</button>
       <button class="tag-btn" data-tag="healthy" data-name="${dName}" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc; background:white; font-size:12px; cursor:pointer;">🥗 Healthy</button>
@@ -524,7 +469,7 @@ document.querySelector('#dialogBody').onclick = async(e) => {
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({ dish_name: dName, tag: tag, user_id: myUserId })
           });
-          toast("✅ Tag saved to community database!");
+          toast("✅ Tag saved! Thank you!");
       } catch(err) {
           toast("⚠️ Failed to save tag.", true);
       }
@@ -536,7 +481,7 @@ document.querySelector('#dialogBody').onclick = async(e) => {
     let rating = rateBtn.dataset.rate;
     let dName = rateBtn.dataset.name;
     
-    toast("⏳ Updating User-Item Matrix...");
+    toast("⏳ Updating your taste profile...");
     
     try {
       await fetch(`${API_BASE_URL}/api/feedback`, {
@@ -545,14 +490,14 @@ document.querySelector('#dialogBody').onclick = async(e) => {
         body: JSON.stringify({dish_id: rateBtn.dataset.id, dish_name: dName, rating: rating, mood: mood, user_id: myUserId})
       });
     } catch(err) {
-        toast("⚠️ Failed to save feedback to database.", true);
+        toast("⚠️ Failed to save feedback.", true);
     }
 
     setTimeout(() => {
       data.feedback.push({id:rateBtn.dataset.id, mood, rating});
       persist();
       document.querySelector('#meal').close();
-      toast('✅ Feedback saved. Model retrained!');
+      toast('✅ Feedback saved!');
     }, 800);
   }
 };
