@@ -54,19 +54,22 @@ h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1
 .steps article{border-bottom:1px solid #d4dccb;padding:17px 0;display:grid;grid-template-columns:35px 1fr}
 .steps article:last-child{border:0}.steps h3{font-size:15px;margin:0}.steps p{margin:6px 0;font-size:12px}.num{color:#95a386;font-size:12px}
 footer{border-top:1px solid #dce0d2;max-width:1164px;margin:0 auto;padding:30px 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
-dialog{border:0;border-radius:22px;padding:32px;max-width:550px;width:90%;color:var(--ink);background:var(--cream); max-height: 90vh; overflow-y: auto;}
+dialog{border:0;border-radius:22px;padding:32px;max-width:500px;width:90%;color:var(--ink);background:var(--cream); max-height: 90vh; overflow-y: auto;}
 dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-size:30px}dialog p{font-size:13px}
 .rating{display:flex;gap:8px;margin-top:10px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1;cursor:pointer;}
 .notice{font-size:11px;color:var(--muted)}
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10;text-align:center;}
 .ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
-.onboarding-list{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
-.onboarding-item{display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; border-radius:10px; border:1px solid #d9dfcf;}
-.onboarding-item span{font-size:14px; font-weight:bold;}
-.onboarding-rating{display:flex; gap:5px;}
-.onboarding-rating button{border:1px solid #ccc; background:transparent; border-radius:5px; padding:8px 12px; cursor:pointer; font-size:16px; transition:0.2s;}
-.onboarding-rating button.selected{background:var(--green); color:white; border-color:var(--green);}
-.survey-select{border:1px solid #ccc; border-radius:5px; padding:6px; font-size:12px;}
+
+/* NEW ONBOARDING STYLES */
+.ob-progress{width:100%; height:6px; background:#e0e5d8; border-radius:3px; margin-bottom:30px; overflow:hidden;}
+.ob-progress-bar{height:100%; background:var(--green); width:0%; transition:width 0.3s ease;}
+.ob-question{font-family:Georgia, serif; font-size:26px; margin-bottom:30px; line-height:1.3;}
+.ob-options{display:flex; flex-direction:column; gap:12px;}
+.ob-btn{background:white; border:2px solid #dce1d2; border-radius:14px; padding:18px; font-size:16px; font-weight:bold; text-align:left; transition:0.2s; color:var(--ink);}
+.ob-btn:hover{border-color:var(--green); background:#f0f4e8;}
+.ob-btn.selected{border-color:var(--green); background:var(--green); color:white;}
+.ob-emoji{font-size:60px; text-align:center; margin-bottom:15px;}
 @media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
 </style>
 </head>
@@ -185,52 +188,11 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <div id="dialogBody"></div>
 </dialog>
 
+<!-- NEW STEP-BY-STEP ONBOARDING MODAL -->
 <dialog id="onboarding">
   <div style="text-align:center;">
-    <div style="font-size:40px; margin-bottom:10px;">📝</div>
-    <h2 style="font-family:Georgia, serif; margin-bottom:10px;">Build Your Taste Profile</h2>
-    <p style="color:var(--muted); margin-bottom:15px;">Rate these 5 dishes and answer a few quick questions to let our AI cluster you.</p>
-    
-    <div class="onboarding-list" id="onboarding-list"></div>
-    
-    <h3 style="font-size: 14px; margin: 20px 0 10px 0;">AI Profiling Survey (K-Means)</h3>
-    <div class="onboarding-list">
-        <div class="onboarding-item">
-            <span>How much does price matter?</span>
-            <select class="survey-select" id="q1"><option value="1">1 (Low)</option><option value="3" selected>3</option><option value="5">5 (High)</option></select>
-        </div>
-        <div class="onboarding-item">
-            <span>Taste vs Health priority?</span>
-            <select class="survey-select" id="q2"><option value="1">1 (Health)</option><option value="3" selected>3</option><option value="5">5 (Taste)</option></select>
-        </div>
-        <div class="onboarding-item">
-            <span>Eating out frequency?</span>
-            <select class="survey-select" id="q3"><option value="1">Rarely</option><option value="3" selected>Sometimes</option><option value="5">Often</option></select>
-        </div>
-        <div class="onboarding-item">
-            <span>Do you crave savory when stressed?</span>
-            <select class="survey-select" id="q4"><option value="0">No</option><option value="1" selected>Yes</option></select>
-        </div>
-        <div class="onboarding-item">
-            <span>Do you crave sweet when stressed?</span>
-            <select class="survey-select" id="q5"><option value="0" selected>No</option><option value="1">Yes</option></select>
-        </div>
-        <div class="onboarding-item">
-            <span>Are you vegetarian?</span>
-            <select class="survey-select" id="q6"><option value="0" selected>No</option><option value="1">Yes</option></select>
-        </div>
-        <div class="onboarding-item">
-            <span>Prefer comfort food when tired?</span>
-            <select class="survey-select" id="q7"><option value="0">No</option><option value="1" selected>Yes</option></select>
-        </div>
-        <div class="onboarding-item">
-            <span>How long do you spend deciding?</span>
-            <select class="survey-select" id="q8"><option value="1">Fast</option><option value="3" selected>Average</option><option value="5">Long</option></select>
-        </div>
-    </div>
-
-    <button id="finish-onboarding" class="pill" style="margin-top: 25px; width: 100%; display: none;">Save Profile & Continue</button>
-    <button id="skip-onboarding" style="background:none; border:none; color:var(--muted); text-decoration:underline; margin-top:15px; cursor:pointer; font-size:12px;">Skip for now</button>
+    <div class="ob-progress"><div class="ob-progress-bar" id="ob-bar"></div></div>
+    <div id="ob-content"></div>
   </div>
 </dialog>
 
@@ -246,80 +208,115 @@ if (!myUserId) {
     localStorage.setItem('moodbite_uid', myUserId);
 }
 
-// --- ONBOARDING LOGIC ---
+// --- STEP-BY-STEP ONBOARDING LOGIC ---
 let hasProfile = localStorage.getItem('moodbite_profile_built');
-let onboardingData = {};
+let currentStep = 0;
+let surveyAnswers = {}; 
+let tasteRatings = {};
 
-const onboardingFoods = [
-    { dish: "Spicy Ramen", emoji: "🍜" },
-    { dish: "Margherita Pizza", emoji: "🍕" },
-    { dish: "Avocado Grain Bowl", emoji: "🥑" },
-    { dish: "Cheeseburger", emoji: "🍔" },
-    { dish: "Sushi Platter", emoji: "🍣" }
+// Define the exact flow of questions (K-Means first, then Taste Profile)
+const onboardingSteps = [
+    // --- K-MEANS QUESTIONS (Hidden jargon) ---
+    { type: 'question', id: 'q1', text: "How much does price matter when choosing a meal?", options: [{label: "Not much", val: 1}, {label: "Somewhat", val: 3}, {label: "A lot", val: 5}] },
+    { type: 'question', id: 'q2', text: "When eating, what matters more to you?", options: [{label: "Health", val: 1}, {label: "Balance", val: 3}, {label: "Taste", val: 5}] },
+    { type: 'question', id: 'q3', text: "How often do you eat out or order in?", options: [{label: "Rarely", val: 1}, {label: "Sometimes", val: 3}, {label: "Often", val: 5}] },
+    { type: 'question', id: 'q4', text: "When stressed, do you crave savory food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { type: 'question', id: 'q5', text: "When stressed, do you crave sweet food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { type: 'question', id: 'q6', text: "Are you vegetarian?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { type: 'question', id: 'q7', text: "When tired, do you reach for comfort food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { type: 'question', id: 'q8', text: "How long do you spend deciding what to eat?", options: [{label: "Quickly", val: 1}, {label: "Average", val: 3}, {label: "A long time", val: 5}] },
+    
+    // --- TASTE PROFILE (Food Ratings) ---
+    { type: 'rating', id: 'Spicy Ramen', text: "How do you feel about Spicy Ramen?", emoji: "🍜", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
+    { type: 'rating', id: 'Margherita Pizza', text: "How do you feel about Pizza?", emoji: "🍕", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
+    { type: 'rating', id: 'Avocado Grain Bowl', text: "How do you feel about Grain Bowls?", emoji: "🥑", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
+    { type: 'rating', id: 'Cheeseburger', text: "How do you feel about Cheeseburgers?", emoji: "🍔", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
+    { type: 'rating', id: 'Sushi Platter', text: "How do you feel about Sushi?", emoji: "🍣", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] }
 ];
 
+// Force onboarding if not done
 if (!hasProfile) {
     setTimeout(() => {
         document.getElementById('onboarding').showModal();
-        renderOnboarding();
+        renderStep();
     }, 1000);
 }
 
-function renderOnboarding() {
-    const list = document.getElementById('onboarding-list');
-    list.innerHTML = onboardingFoods.map(f => `
-        <div class="onboarding-item">
-            <span>${f.emoji} ${f.dish}</span>
-            <div class="onboarding-rating">
-                <button onclick="rateOnboard('${f.dish}', 5, this)">👍</button>
-                <button onclick="rateOnboard('${f.dish}', 3, this)">😐</button>
-                <button onclick="rateOnboard('${f.dish}', 1, this)">👎</button>
-            </div>
-        </div>
-    `).join('');
-}
+function renderStep() {
+    if (currentStep >= onboardingSteps.length) return;
 
-window.rateOnboard = function(dish, rating, btn) {
-    let row = btn.parentElement;
-    row.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    onboardingData[dish] = rating;
+    const step = onboardingSteps[currentStep];
+    const progressBar = document.getElementById('ob-bar');
+    progressBar.style.width = `${((currentStep) / onboardingSteps.length) * 100}%`;
+
+    const content = document.getElementById('ob-content');
     
-    if (Object.keys(onboardingData).length >= 3) {
-        document.getElementById('finish-onboarding').style.display = 'block';
+    let html = '';
+    if (step.emoji) {
+        html += `<div class="ob-emoji">${step.emoji}</div>`;
     }
+    html += `<div class="ob-question">${step.text}</div>`;
+    html += `<div class="ob-options">`;
+    
+    step.options.forEach(opt => {
+        html += `<button class="ob-btn" onclick="handleAnswer('${step.id}', ${opt.val})">${opt.label}</button>`;
+    });
+    
+    html += `</div>`;
+    content.innerHTML = html;
 }
 
-document.getElementById('finish-onboarding').onclick = async () => {
-    let btn = document.getElementById('finish-onboarding');
-    let originalText = btn.innerText;
-    btn.innerText = "Saving...";
-    btn.disabled = true;
+window.handleAnswer = function(id, val) {
+    const step = onboardingSteps[currentStep];
     
-    let payload = Object.keys(onboardingData).map(dish => ({
+    // Save answer
+    if (step.type === 'question') {
+        surveyAnswers[id] = val;
+    } else {
+        tasteRatings[id] = val;
+    }
+
+    // Animate selection
+    const buttons = document.querySelectorAll('.ob-btn');
+    buttons.forEach(b => b.style.opacity = '0.5');
+    event.target.style.opacity = '1';
+    event.target.style.transform = 'scale(0.98)';
+
+    // Move to next step
+    setTimeout(() => {
+        currentStep++;
+        if (currentStep < onboardingSteps.length) {
+            renderStep();
+        } else {
+            submitOnboarding();
+        }
+    }, 250);
+}
+
+async function submitOnboarding() {
+    const content = document.getElementById('ob-content');
+    content.innerHTML = `
+        <div style="padding: 40px 0;">
+            <div style="font-size:40px; margin-bottom:20px;">🧠</div>
+            <h2 style="font-family:Georgia, serif;">Clustering your profile...</h2>
+            <p style="color:var(--muted)">Applying K-Means segmentation to find your food personality.</p>
+        </div>
+    `;
+
+    let ratingsPayload = Object.keys(tasteRatings).map(dish => ({
         dish: dish,
-        rating: onboardingData[dish]
+        rating: tasteRatings[dish]
     }));
-    
-    // Get the 8 K-Means features
-    let q1 = parseFloat(document.getElementById('q1').value);
-    let q2 = parseFloat(document.getElementById('q2').value);
-    let q3 = parseFloat(document.getElementById('q3').value);
-    let q4 = parseFloat(document.getElementById('q4').value);
-    let q5 = parseFloat(document.getElementById('q5').value);
-    let q6 = parseFloat(document.getElementById('q6').value);
-    let q7 = parseFloat(document.getElementById('q7').value);
-    let q8 = parseFloat(document.getElementById('q8').value);
-    
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/onboarding`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ 
                 user_id: myUserId, 
-                ratings: payload,
-                q1: q1, q2: q2, q3: q3, q4: q4,
-                q5: q5, q6: q6, q7: q7, q8: q8
+                ratings: ratingsPayload,
+                q1: surveyAnswers.q1, q2: surveyAnswers.q2, q3: surveyAnswers.q3, q4: surveyAnswers.q4,
+                q5: surveyAnswers.q5, q6: surveyAnswers.q6, q7: surveyAnswers.q7, q8: surveyAnswers.q8
             })
         });
         
@@ -333,17 +330,16 @@ document.getElementById('finish-onboarding').onclick = async () => {
     } catch (err) {
         console.error(err);
         toast('⚠️ Failed to connect to backend. Try again.', true);
-        btn.innerText = originalText;
-        btn.disabled = false;
+        // Reset to try again
+        currentStep = 0; 
+        renderStep();
     }
-};
+}
 
-document.getElementById('skip-onboarding').onclick = () => {
-    hasProfile = true;
-    localStorage.setItem('moodbite_profile_built', 'true');
-    document.getElementById('onboarding').close();
-    render();
-};
+// Prevent closing onboarding early
+document.getElementById('onboarding').addEventListener('cancel', function(e) {
+    e.preventDefault();
+});
 
 // --- MAIN APP LOGIC ---
 const moods=[['stressed','😮‍💨','Stressed'],['happy','😊','Happy'],['tired','😴','Tired'],['cozy','☺️','Cozy'],['adventurous','🤩','Adventurous'],['balanced','🌿','Balanced']];
