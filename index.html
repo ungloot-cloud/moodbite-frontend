@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MoodBite — Food for how you feel</title>
 <style>
-:root{--ink:#243c32;--green:#315a43;--cream:#f8f7ef;--muted:#717b6e;--orange:#f29968}
+:root{--ink:#243c32;--green:#315a43;--cream:#f8f7ef;--muted:#717b6e;--orange:#f29968;--border:#dfe3d5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,sans-serif}
 button,a,input,select{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}
-header{max-width:1240px;margin:auto;padding:27px 38px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #dfe3d5}
+header{max-width:1240px;margin:auto;padding:27px 38px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
 .brand{display:flex;align-items:center;gap:8px;font-size:24px;font-weight:800;letter-spacing:-1px;color:var(--ink)}
 .brand svg{width:32px;height:32px;fill:var(--green);transition:transform 0.3s}
 .brand:hover svg{transform:rotate(-15deg) scale(1.1)}
@@ -32,7 +32,7 @@ h1 em{color:#7d925f}p{line-height:1.7}.hero p{color:var(--muted);max-width:420px
 h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1.2px;margin:14px 0}
 .section-head{display:flex;justify-content:space-between;align-items:end}.section-head p{font-size:13px;color:var(--muted)}
 .moods{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:28px 0}
-.mood{background:transparent;border:1px solid #dce1d2;border-radius:15px;padding:22px 8px;color:var(--ink);transition:.2s}
+.mood{background:transparent;border:1px solid var(--border);border-radius:15px;padding:22px 8px;color:var(--ink);transition:.2s}
 .mood:hover{transform:translateY(-4px);background:#edf0e3}.mood.active{background:var(--green);color:white;border-color:var(--green)}
 .mood span{font-size:29px;display:block;margin-bottom:12px}.mood b{font-size:12px}
 .filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px}
@@ -55,33 +55,45 @@ h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1
 .steps article{border-bottom:1px solid #d4dccb;padding:17px 0;display:grid;grid-template-columns:35px 1fr}
 .steps article:last-child{border:0}.steps h3{font-size:15px;margin:0}.steps p{margin:6px 0;font-size:12px}.num{color:#95a386;font-size:12px}
 footer{border-top:1px solid #dce0d2;max-width:1164px;margin:0 auto;padding:30px 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
-dialog{border:0;border-radius:22px;padding:32px;max-width:650px;width:95%;color:var(--ink);background:var(--cream); max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2);}
-dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-size:30px}dialog p{font-size:13px}
+dialog{border:0;border-radius:24px;padding:0;max-width:600px;width:95%;color:var(--ink);background:var(--cream); max-height: 90vh; box-shadow: 0 24px 60px rgba(0,0,0,0.15);}
+dialog::backdrop{background:#132d2277;backdrop-filter:blur(6px)}dialog h2{font-size:32px}dialog p{font-size:13px}
 .rating{display:flex;gap:8px;margin-top:10px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1;cursor:pointer;}
 .notice{font-size:11px;color:var(--muted)}
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10;text-align:center;}
 .ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
 
 /* LOCKED VIEW STYLES */
-.locked-card{background:#fffdf7; border:1px solid #e4e5d9; border-radius:20px; padding:60px 40px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.03);}
+.locked-card{background:#fffdf7; border:1px solid #e4e5d9; border-radius:24px; padding:60px 40px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.03);}
 .locked-card h3{font-family:Georgia, serif; font-size:28px; margin-bottom:15px;}
 
-/* SINGLE SCREEN ONBOARDING STYLES */
-.ob-section-title{font-family:Georgia, serif; font-size:18px; margin: 25px 0 15px 0; border-bottom: 1px solid #dce1d2; padding-bottom: 5px; color: var(--green);}
-.ob-grid{display:grid; grid-template-columns:1fr; gap:12px;}
-.ob-card{background:white; padding:15px; border-radius:12px; border:1px solid #d9dfcf;}
-.ob-card p{font-size:13px; font-weight:bold; margin:0 0 10px 0; line-height:1.4;}
-.ob-options{display:flex; gap:6px; flex-wrap:wrap;}
-.ob-btn{background:#f4f6f0; border:1px solid #dce1d2; border-radius:8px; padding:6px 12px; font-size:11px; transition:0.2s; color:var(--ink);}
-.ob-btn:hover{border-color:var(--green); background:#e6ebdb;}
-.ob-btn.selected{background:var(--green); border-color:var(--green); color:white;}
-.taste-row{display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; border-radius:10px; border:1px solid #d9dfcf; margin-bottom:8px;}
-.taste-row span{font-size:13px; font-weight:bold;}
-.taste-options{display:flex; gap:4px;}
-.taste-btn{border:1px solid #ccc; background:transparent; border-radius:6px; padding:6px 10px; cursor:pointer; font-size:14px; transition:0.2s;}
-.taste-btn.selected{background:var(--green); color:white; border-color:var(--green);}
+/* REDESIGNED ONBOARDING MODAL */
+.ob-header{padding: 30px 30px 20px 30px; text-align: center; background: #fffdf7; border-bottom: 1px solid #e4e5d9; border-radius: 24px 24px 0 0; position: sticky; top: 0; z-index: 10;}
+.ob-progress-track{width: 100%; height: 6px; background: #e0e5d8; border-radius: 3px; margin-top: 15px; overflow: hidden;}
+.ob-progress-fill{height: 100%; background: var(--green); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 3px;}
+.ob-body{padding: 25px 30px 30px 30px;}
+.ob-section-title{font-family:Georgia, serif; font-size:20px; margin: 0 0 15px 0; color: var(--green); display: flex; align-items: center; gap: 8px;}
+.ob-q-card{margin-bottom: 20px;}
+.ob-q-card p{font-size:14px; font-weight:bold; margin:0 0 12px 0; line-height:1.5; color: var(--ink);}
+.ob-chips{display:flex; gap:8px; flex-wrap:wrap;}
+.ob-chip{background:white; border:1.5px solid #dce1d2; border-radius:50px; padding:10px 18px; font-size:13px; font-weight:500; transition:all 0.2s; color:var(--muted);}
+.ob-chip:hover{border-color:var(--green); color:var(--ink); transform: translateY(-1px);}
+.ob-chip.selected{background:var(--green); border-color:var(--green); color:white; transform: scale(1.02); box-shadow: 0 4px 12px rgba(49, 90, 67, 0.2);}
+.taste-row{display:flex; justify-content:space-between; align-items:center; background:white; padding:12px 16px; border-radius:14px; border:1px solid #d9dfcf; margin-bottom:10px; transition: border-color 0.2s;}
+.taste-row:hover{border-color: #b0c0a3;}
+.taste-info{display: flex; align-items: center; gap: 12px;}
+.taste-info span{font-size:15px; font-weight:bold;}
+.taste-info small{display: block; font-size: 11px; color: var(--muted); font-weight: normal;}
+.taste-options{display:flex; gap:6px;}
+.taste-btn{border:1px solid #dce1d2; background:var(--cream); border-radius:10px; padding:8px 14px; cursor:pointer; font-size:18px; transition:all 0.2s;}
+.taste-btn:hover{background:white; border-color:#b0c0a3; transform: scale(1.05);}
+.taste-btn.selected{background:var(--green); color:white; border-color:var(--green); transform: scale(1.05);}
+.ob-footer{padding: 0 30px 30px 30px; text-align: center;}
+.btn-save{width: 100%; padding: 18px; font-size: 15px; font-weight: bold; border-radius: 50px; border: none; background: #dce1d2; color: #8a9686; pointer-events: none; transition: all 0.3s;}
+.btn-save.active{background: var(--green); color: white; pointer-events: auto; box-shadow: 0 8px 20px rgba(49, 90, 67, 0.2);}
+.btn-save.active:hover{transform: translateY(-2px); box-shadow: 0 10px 25px rgba(49, 90, 67, 0.3);}
 
-@media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
+@media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}
+.ob-chips{gap: 6px;} .ob-chip{padding: 8px 14px; font-size: 12px;}}
 </style>
 </head>
 <body>
@@ -126,7 +138,6 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       <div class="notice">Interactive concept · AI backend connected</div>
     </div>
 
-    <!-- LOCKED VIEW (Shows if no profile) -->
     <div id="locked-view" style="display: none; margin-top: 30px;">
       <div class="locked-card">
         <div style="font-size: 60px; margin-bottom: 15px;">👋</div>
@@ -136,7 +147,6 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       </div>
     </div>
 
-    <!-- APP VIEW (Shows if profile exists) -->
     <div id="app-view" style="display: none;">
       <h2>How are you feeling?</h2>
       <p style="color:var(--muted);font-size:14px">No right or wrong answer. Just a starting point for something delicious.</p>
@@ -154,7 +164,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       <div id="ml_status" class="ml-box">
         > Initializing ML Engine...<br>
         > Fetching user context...<br>
-        > Running Context-Aware Scoring...
+        > Connecting to Python API...
       </div>
 
       <div id="resultIntro" class="micro" aria-live="polite" style="margin-bottom:15px;"></div>
@@ -191,118 +201,114 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 
 <dialog id="meal"><div id="dialogBody"></div></dialog>
 
-<!-- SINGLE-SCREEN ONBOARDING MODAL -->
+<!-- REDESIGNED ONBOARDING MODAL -->
 <dialog id="onboarding">
-  <h2 style="font-family:Georgia, serif; margin-bottom:5px; text-align:center;">Build Your Food Profile</h2>
-  <p style="color:var(--muted); font-size:13px; text-align:center; margin-bottom:20px;">Answer a few quick questions so our AI can personalize your recommendations.</p>
+  <div class="ob-header">
+    <h2 style="font-family:Georgia, serif; margin: 0 0 5px 0;">Build Your Profile</h2>
+    <p style="color:var(--muted); margin: 0;">We just need a few details to train your AI.</p>
+    <div class="ob-progress-track"><div class="ob-progress-fill" id="ob-progress-bar"></div></div>
+  </div>
 
-  <div id="ob-form">
-    <div class="ob-section-title">1. Your Habits (from our Research Survey)</div>
-    <div class="ob-grid">
-      <!-- Q3 -->
-      <div class="ob-card">
-        <p>How much time do you spend doomscrolling through food apps just trying to find something to eat?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q1', 1, this)">&lt; 5 mins</button>
-          <button class="ob-btn" onclick="handleAnswer('q1', 2, this)">5-10 mins</button>
-          <button class="ob-btn" onclick="handleAnswer('q1', 3, this)">10-20 mins</button>
-          <button class="ob-btn" onclick="handleAnswer('q1', 4, this)">&gt; 20 mins</button>
-        </div>
-      </div>
-      <!-- Q4 -->
-      <div class="ob-card">
-        <p>How frequently do you experience frustration or "decision fatigue" when deciding what to eat?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q2', 1, this)">1 (Never)</button>
-          <button class="ob-btn" onclick="handleAnswer('q2', 2, this)">2</button>
-          <button class="ob-btn" onclick="handleAnswer('q2', 3, this)">3</button>
-          <button class="ob-btn" onclick="handleAnswer('q2', 4, this)">4</button>
-          <button class="ob-btn" onclick="handleAnswer('q2', 5, this)">5 (Always)</button>
-        </div>
-      </div>
-      <!-- Q6 -->
-      <div class="ob-card">
-        <p>To what extent do you agree: "My emotional state significantly influences what I actually want to eat."</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q3', 1, this)">1 (Disagree)</button>
-          <button class="ob-btn" onclick="handleAnswer('q3', 2, this)">2</button>
-          <button class="ob-btn" onclick="handleAnswer('q3', 3, this)">3</button>
-          <button class="ob-btn" onclick="handleAnswer('q3', 4, this)">4</button>
-          <button class="ob-btn" onclick="handleAnswer('q3', 5, this)">5 (Agree)</button>
-        </div>
-      </div>
-      <!-- Q7 Comfort -->
-      <div class="ob-card">
-        <p>When stressed, do you actively seek comfort foods (heavy carbs, fried items, sweets)?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q4', 0, this)">No</button>
-          <button class="ob-btn" onclick="handleAnswer('q4', 1, this)">Yes</button>
-        </div>
-      </div>
-      <!-- Q7 Fast -->
-      <div class="ob-card">
-        <p>When stressed, do you look for fast, convenient options to save time?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q5', 0, this)">No</button>
-          <button class="ob-btn" onclick="handleAnswer('q5', 1, this)">Yes</button>
-        </div>
-      </div>
-      <!-- Q8 Mood -->
-      <div class="ob-card">
-        <p>Does your current mood/stress level impact your food choices the most?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q6', 0, this)">No</button>
-          <button class="ob-btn" onclick="handleAnswer('q6', 1, this)">Yes</button>
-        </div>
-      </div>
-      <!-- Q8 Time -->
-      <div class="ob-card">
-        <p>Does the time of day / class schedule impact your food choices the most?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q7', 0, this)">No</button>
-          <button class="ob-btn" onclick="handleAnswer('q7', 1, this)">Yes</button>
-        </div>
-      </div>
-      <!-- Q11 Feedback -->
-      <div class="ob-card">
-        <p>How likely are you to provide a quick 1-tap feedback rating if it refined future suggestions?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q8', 1, this)">1 (Unlikely)</button>
-          <button class="ob-btn" onclick="handleAnswer('q8', 2, this)">2</button>
-          <button class="ob-btn" onclick="handleAnswer('q8', 3, this)">3</button>
-          <button class="ob-btn" onclick="handleAnswer('q8', 4, this)">4</button>
-          <button class="ob-btn" onclick="handleAnswer('q8', 5, this)">5 (Likely)</button>
-        </div>
+  <div class="ob-body" id="ob-form">
+    
+    <h3 class="ob-section-title">🍽️ Your Eating Habits</h3>
+    
+    <!-- Q4 -->
+    <div class="ob-q-card">
+      <p>How often do you experience "decision fatigue" when figuring out what to eat?</p>
+      <div class="ob-chips">
+        <button class="ob-chip" onclick="handleAnswer('q2', 1, this)">Never</button>
+        <button class="ob-chip" onclick="handleAnswer('q2', 2, this)">Rarely</button>
+        <button class="ob-chip" onclick="handleAnswer('q2', 3, this)">Sometimes</button>
+        <button class="ob-chip" onclick="handleAnswer('q2', 4, this)">Often</button>
+        <button class="ob-chip" onclick="handleAnswer('q2', 5, this)">Always</button>
       </div>
     </div>
 
-    <div class="ob-section-title">2. Rate Your Taste</div>
-    <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">Rate at least 3 dishes so we can match your flavor profile.</p>
+    <!-- Q6 -->
+    <div class="ob-q-card">
+      <p>Does your emotional state significantly influence what you want to eat?</p>
+      <div class="ob-chips">
+        <button class="ob-chip" onclick="handleAnswer('q3', 1, this)">Not at all</button>
+        <button class="ob-chip" onclick="handleAnswer('q3', 2, this)">Slightly</button>
+        <button class="ob-chip" onclick="handleAnswer('q3', 3, this)">Neutral</button>
+        <button class="ob-chip" onclick="handleAnswer('q3', 4, this)">Very much</button>
+        <button class="ob-chip" onclick="handleAnswer('q3', 5, this)">Completely</button>
+      </div>
+    </div>
+
+    <!-- Q7 Comfort -->
+    <div class="ob-q-card">
+      <p>When stressed, do you actively seek comfort foods (carbs, fried, sweets)?</p>
+      <div class="ob-chips">
+        <button class="ob-chip" onclick="handleAnswer('q4', 0, this)">No</button>
+        <button class="ob-chip" onclick="handleAnswer('q4', 1, this)">Yes</button>
+      </div>
+    </div>
+
+    <!-- Q7 Fast -->
+    <div class="ob-q-card">
+      <p>When stressed, do you look for fast, convenient options to save time?</p>
+      <div class="ob-chips">
+        <button class="ob-chip" onclick="handleAnswer('q5', 0, this)">No</button>
+        <button class="ob-chip" onclick="handleAnswer('q5', 1, this)">Yes</button>
+      </div>
+    </div>
+
+    <!-- Q8 Mood -->
+    <div class="ob-q-card">
+      <p>Does your current mood level impact your food choices the most?</p>
+      <div class="ob-chips">
+        <button class="ob-chip" onclick="handleAnswer('q6', 0, this)">No</button>
+        <button class="ob-chip" onclick="handleAnswer('q6', 1, this)">Yes</button>
+      </div>
+    </div>
+
+    <!-- Q8 Time -->
+    <div class="ob-q-card">
+      <p>Does the time of day or your class schedule impact your choices most?</p>
+      <div class="ob-chips">
+        <button class="ob-chip" onclick="handleAnswer('q7', 0, this)">No</button>
+        <button class="ob-chip" onclick="handleAnswer('q7', 1, this)">Yes</button>
+      </div>
+    </div>
+
+    <hr style="border:0; border-top:1px dashed #dce1d2; margin: 30px 0;">
+
+    <h3 class="ob-section-title">😋 Rate Your Taste</h3>
+    <p style="font-size:13px; color:var(--muted); margin-top:-10px; margin-bottom:15px;">Tap to rate at least 3 dishes.</p>
+    
     <div id="taste-list">
       <!-- Generated by JS -->
     </div>
 
-    <button id="finish-btn" class="pill" style="width: 100%; margin-top: 20px; padding: 16px; background: #ccc; color: white; pointer-events: none; transition: 0.3s;" onclick="submitOnboarding()">Save Profile & Continue</button>
   </div>
 
-  <div id="ob-loading" style="display: none; text-align: center; padding: 40px 0;">
-    <div style="font-size:40px; margin-bottom:20px;">🧠</div>
-    <h2 style="font-family:Georgia, serif;">Clustering your profile...</h2>
+  <div class="ob-footer" id="ob-footer">
+    <button id="finish-btn" class="btn-save" onclick="submitOnboarding()">Save Profile & Continue</button>
+  </div>
+
+  <!-- LOADING STATE -->
+  <div id="ob-loading" style="display: none; text-align: center; padding: 60px 30px;">
+    <div style="font-size:50px; margin-bottom:20px; animation: pulse 1.5s infinite;">🧠</div>
+    <h2 style="font-family:Georgia, serif; margin-bottom:10px;">Clustering your profile...</h2>
     <p style="color:var(--muted)">Applying K-Means segmentation to find your food personality.</p>
+    <style>@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }</style>
   </div>
 
-  <div id="ob-success" style="display: none; text-align: center; padding: 20px 0;">
-    <div style="font-size:60px; margin-bottom:15px;">🎉</div>
+  <!-- SUCCESS STATE -->
+  <div id="ob-success" style="display: none; text-align: center; padding: 50px 30px;">
+    <div style="font-size:70px; margin-bottom:15px; animation: pop 0.5s ease-out;">🎉</div>
     <h2 style="font-family:Georgia, serif; margin-bottom:10px;">You're all set!</h2>
-    <p style="color:var(--muted); margin-bottom:25px; font-size:14px;">We've clustered your profile and personalization is ready.</p>
-    <button class="pill" style="width: 100%; padding: 16px;" onclick="closeOnboarding()">See Recommendations ↗</button>
+    <p style="color:var(--muted); margin-bottom:30px; font-size:14px; max-width:350px; margin-left:auto; margin-right:auto;">We've clustered your profile and personalization is ready. Let's find your next bite.</p>
+    <button class="btn-save active" onclick="closeOnboarding()">See Recommendations ↗</button>
+    <style>@keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }</style>
   </div>
 </dialog>
 
 <div id="toast" role="status"></div>
 
 <script>
-// ⚠️ CHANGE THIS TO YOUR LIVE RENDER URL
 const API_BASE_URL = "https://moodbite-backend-89pi.onrender.com"; 
 
 let myUserId = localStorage.getItem('moodbite_uid');
@@ -321,20 +327,18 @@ const tasteFoods = [
     { dish: "Sushi Platter", emoji: "🍣" }
 ];
 
-// Toggle Locked vs App View on Load
 function checkProfileStatus() {
     if (hasProfile) {
         document.getElementById('locked-view').style.display = 'none';
         document.getElementById('app-view').style.display = 'block';
-        render(); // Load recommendations
+        render(); 
     } else {
         document.getElementById('locked-view').style.display = 'block';
         document.getElementById('app-view').style.display = 'none';
-        renderTasteList(); // Populate the modal
+        renderTasteList(); 
     }
 }
 
-// Open Modal
 document.querySelectorAll('.cta-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         if (!hasProfile) {
@@ -351,9 +355,15 @@ function renderTasteList() {
     const list = document.getElementById('taste-list');
     list.innerHTML = tasteFoods.map(f => `
         <div class="taste-row">
-            <span>${f.emoji} ${f.dish}</span>
+            <div class="taste-info">
+                <div style="font-size: 28px;">${f.emoji}</div>
+                <div>
+                    <span>${f.dish}</span>
+                    <small>Rate your preference</small>
+                </div>
+            </div>
             <div class="taste-options">
-                <button class="taste-btn" onclick="rateTaste('${f.dish}', 5, this)">👍</button>
+                <button class="taste-btn" onclick="rateTaste('${f.dish}', 5, this)">❤️</button>
                 <button class="taste-btn" onclick="rateTaste('${f.dish}', 3, this)">😐</button>
                 <button class="taste-btn" onclick="rateTaste('${f.dish}', 1, this)">👎</button>
             </div>
@@ -363,29 +373,35 @@ function renderTasteList() {
 
 window.handleAnswer = function(id, val, btn) {
     surveyAnswers[id] = val;
-    btn.parentElement.querySelectorAll('.ob-btn').forEach(b => b.classList.remove('selected'));
+    btn.parentElement.querySelectorAll('.ob-chip').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-    checkFormCompletion();
+    updateProgress();
 }
 
 window.rateTaste = function(dish, rating, btn) {
     btn.parentElement.querySelectorAll('.taste-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     tasteRatings[dish] = rating;
-    checkFormCompletion();
+    updateProgress();
 }
 
-function checkFormCompletion() {
-    // We need all 8 questions answered and at least 3 taste ratings
-    if (Object.keys(surveyAnswers).length === 8 && Object.keys(tasteRatings).length >= 3) {
-        let btn = document.getElementById('finish-btn');
-        btn.style.background = "var(--green)";
-        btn.style.pointerEvents = "auto";
+function updateProgress() {
+    let totalTasks = 6 + 3; // 6 questions + at least 3 ratings
+    let completed = Object.keys(surveyAnswers).length + Math.min(Object.keys(tasteRatings).length, 3);
+    
+    let percentage = (completed / totalTasks) * 100;
+    if(percentage > 100) percentage = 100;
+    
+    document.getElementById('ob-progress-bar').style.width = percentage + "%";
+
+    if (Object.keys(surveyAnswers).length === 6 && Object.keys(tasteRatings).length >= 3) {
+        document.getElementById('finish-btn').classList.add('active');
     }
 }
 
 async function submitOnboarding() {
     document.getElementById('ob-form').style.display = 'none';
+    document.getElementById('ob-footer').style.display = 'none';
     document.getElementById('ob-loading').style.display = 'block';
 
     let ratingsPayload = Object.keys(tasteRatings).map(dish => ({
@@ -399,8 +415,14 @@ async function submitOnboarding() {
             body: JSON.stringify({ 
                 user_id: myUserId, 
                 ratings: ratingsPayload,
-                q1: surveyAnswers.q1, q2: surveyAnswers.q2, q3: surveyAnswers.q3, q4: surveyAnswers.q4,
-                q5: surveyAnswers.q5, q6: surveyAnswers.q6, q7: surveyAnswers.q7, q8: surveyAnswers.q8
+                q1: 3.0, // Hidden: Q3ScrollTime (Average)
+                q2: surveyAnswers.q2 || 3, 
+                q3: surveyAnswers.q3 || 3, 
+                q4: surveyAnswers.q4 || 0,
+                q5: surveyAnswers.q5 || 0, 
+                q6: surveyAnswers.q6 || 0, 
+                q7: surveyAnswers.q7 || 0,
+                q8: 4.0  // Hidden: Q11Feedback (Average)
             })
         });
         
@@ -408,6 +430,7 @@ async function submitOnboarding() {
 
         document.getElementById('ob-loading').style.display = 'none';
         document.getElementById('ob-success').style.display = 'block';
+        document.getElementById('ob-progress-bar').style.width = '100%';
 
         hasProfile = true;
         localStorage.setItem('moodbite_profile_built', 'true');
@@ -417,6 +440,7 @@ async function submitOnboarding() {
         toast('⚠️ Failed to connect to backend. Try again.', true);
         document.getElementById('ob-loading').style.display = 'none';
         document.getElementById('ob-form').style.display = 'block';
+        document.getElementById('ob-footer').style.display = 'block';
     }
 }
 
@@ -430,7 +454,6 @@ document.getElementById('onboarding').addEventListener('cancel', function(e) {
     if (!hasProfile) e.preventDefault(); 
 });
 
-// --- MAIN APP LOGIC ---
 const moods=[['stressed','😮‍💨','Stressed'],['happy','😊','Happy'],['tired','😴','Tired'],['cozy','☺️','Cozy'],['adventurous','🤩','Adventurous'],['balanced','🌿','Balanced']];
 const fallbackDishes=[
   {id:1,name:'Dim Sum Platter',emoji:'🥟',veg:false,desc:'A classic Cantonese comfort.'},
