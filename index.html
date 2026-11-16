@@ -55,7 +55,7 @@ h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1
 .steps article{border-bottom:1px solid #d4dccb;padding:17px 0;display:grid;grid-template-columns:35px 1fr}
 .steps article:last-child{border:0}.steps h3{font-size:15px;margin:0}.steps p{margin:6px 0;font-size:12px}.num{color:#95a386;font-size:12px}
 footer{border-top:1px solid #dce0d2;max-width:1164px;margin:0 auto;padding:30px 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
-dialog{border:0;border-radius:22px;padding:32px;max-width:600px;width:90%;color:var(--ink);background:var(--cream); max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2);}
+dialog{border:0;border-radius:22px;padding:32px;max-width:650px;width:95%;color:var(--ink);background:var(--cream); max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2);}
 dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-size:30px}dialog p{font-size:13px}
 .rating{display:flex;gap:8px;margin-top:10px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1;cursor:pointer;}
 .notice{font-size:11px;color:var(--muted)}
@@ -67,18 +67,18 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 .locked-card h3{font-family:Georgia, serif; font-size:28px; margin-bottom:15px;}
 
 /* SINGLE SCREEN ONBOARDING STYLES */
-.ob-section-title{font-family:Georgia, serif; font-size:20px; margin: 25px 0 15px 0; border-bottom: 1px solid #dce1d2; padding-bottom: 5px;}
-.ob-grid{display:grid; grid-template-columns:1fr; gap:15px;}
+.ob-section-title{font-family:Georgia, serif; font-size:18px; margin: 25px 0 15px 0; border-bottom: 1px solid #dce1d2; padding-bottom: 5px; color: var(--green);}
+.ob-grid{display:grid; grid-template-columns:1fr; gap:12px;}
 .ob-card{background:white; padding:15px; border-radius:12px; border:1px solid #d9dfcf;}
-.ob-card p{font-size:13px; font-weight:bold; margin:0 0 10px 0; line-height:1.3;}
-.ob-options{display:flex; gap:8px; flex-wrap:wrap;}
-.ob-btn{background:#f4f6f0; border:1px solid #dce1d2; border-radius:8px; padding:8px 14px; font-size:12px; transition:0.2s; color:var(--ink);}
+.ob-card p{font-size:13px; font-weight:bold; margin:0 0 10px 0; line-height:1.4;}
+.ob-options{display:flex; gap:6px; flex-wrap:wrap;}
+.ob-btn{background:#f4f6f0; border:1px solid #dce1d2; border-radius:8px; padding:6px 12px; font-size:11px; transition:0.2s; color:var(--ink);}
 .ob-btn:hover{border-color:var(--green); background:#e6ebdb;}
 .ob-btn.selected{background:var(--green); border-color:var(--green); color:white;}
-.taste-row{display:flex; justify-content:space-between; align-items:center; background:white; padding:12px 15px; border-radius:10px; border:1px solid #d9dfcf; margin-bottom:10px;}
-.taste-row span{font-size:14px; font-weight:bold;}
-.taste-options{display:flex; gap:6px;}
-.taste-btn{border:1px solid #ccc; background:transparent; border-radius:6px; padding:8px 12px; cursor:pointer; font-size:16px; transition:0.2s;}
+.taste-row{display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; border-radius:10px; border:1px solid #d9dfcf; margin-bottom:8px;}
+.taste-row span{font-size:13px; font-weight:bold;}
+.taste-options{display:flex; gap:4px;}
+.taste-btn{border:1px solid #ccc; background:transparent; border-radius:6px; padding:6px 10px; cursor:pointer; font-size:14px; transition:0.2s;}
 .taste-btn.selected{background:var(--green); color:white; border-color:var(--green);}
 
 @media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
@@ -131,7 +131,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       <div class="locked-card">
         <div style="font-size: 60px; margin-bottom: 15px;">👋</div>
         <h3>Let's find your food personality.</h3>
-        <p style="color:var(--muted); max-width:400px; margin: 0 auto 30px auto;">Take a quick 1-minute survey so our AI can learn your taste, budget, and mood patterns to give you perfect recommendations.</p>
+        <p style="color:var(--muted); max-width:400px; margin: 0 auto 30px auto;">Take a quick 1-minute survey so our AI can learn your habits and taste to give you perfect recommendations.</p>
         <button class="pill cta-btn" style="font-size: 16px; padding: 18px 40px; border: none;">Build My Profile ↗</button>
       </div>
     </div>
@@ -193,84 +193,91 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 
 <!-- SINGLE-SCREEN ONBOARDING MODAL -->
 <dialog id="onboarding">
-  <h2 style="font-family:Georgia, serif; margin-bottom:10px; text-align:center;">Build Your Food Profile</h2>
-  <p style="color:var(--muted); font-size:13px; text-align:center; margin-bottom:25px;">Answer a few quick questions so our AI can personalize your recommendations.</p>
+  <h2 style="font-family:Georgia, serif; margin-bottom:5px; text-align:center;">Build Your Food Profile</h2>
+  <p style="color:var(--muted); font-size:13px; text-align:center; margin-bottom:20px;">Answer a few quick questions so our AI can personalize your recommendations.</p>
 
   <div id="ob-form">
-    <div class="ob-section-title">1. Your Eating Habits</div>
+    <div class="ob-section-title">1. Your Habits (from our Research Survey)</div>
     <div class="ob-grid">
-      <!-- Q1 -->
-      <div class="ob-card">
-        <p>How much does price matter?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q1', 1, this)">Not much</button>
-          <button class="ob-btn" onclick="handleAnswer('q1', 3, this)">Somewhat</button>
-          <button class="ob-btn" onclick="handleAnswer('q1', 5, this)">A lot</button>
-        </div>
-      </div>
-      <!-- Q2 -->
-      <div class="ob-card">
-        <p>When eating, what matters more to you?</p>
-        <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q2', 1, this)">Health</button>
-          <button class="ob-btn" onclick="handleAnswer('q2', 3, this)">Balance</button>
-          <button class="ob-btn" onclick="handleAnswer('q2', 5, this)">Taste</button>
-        </div>
-      </div>
       <!-- Q3 -->
       <div class="ob-card">
-        <p>How often do you eat out or order in?</p>
+        <p>How much time do you spend doomscrolling through food apps just trying to find something to eat?</p>
         <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q3', 1, this)">Rarely</button>
-          <button class="ob-btn" onclick="handleAnswer('q3', 3, this)">Sometimes</button>
-          <button class="ob-btn" onclick="handleAnswer('q3', 5, this)">Often</button>
+          <button class="ob-btn" onclick="handleAnswer('q1', 1, this)">&lt; 5 mins</button>
+          <button class="ob-btn" onclick="handleAnswer('q1', 2, this)">5-10 mins</button>
+          <button class="ob-btn" onclick="handleAnswer('q1', 3, this)">10-20 mins</button>
+          <button class="ob-btn" onclick="handleAnswer('q1', 4, this)">&gt; 20 mins</button>
         </div>
       </div>
       <!-- Q4 -->
       <div class="ob-card">
-        <p>When stressed, do you crave savory food?</p>
+        <p>How frequently do you experience frustration or "decision fatigue" when deciding what to eat?</p>
+        <div class="ob-options">
+          <button class="ob-btn" onclick="handleAnswer('q2', 1, this)">1 (Never)</button>
+          <button class="ob-btn" onclick="handleAnswer('q2', 2, this)">2</button>
+          <button class="ob-btn" onclick="handleAnswer('q2', 3, this)">3</button>
+          <button class="ob-btn" onclick="handleAnswer('q2', 4, this)">4</button>
+          <button class="ob-btn" onclick="handleAnswer('q2', 5, this)">5 (Always)</button>
+        </div>
+      </div>
+      <!-- Q6 -->
+      <div class="ob-card">
+        <p>To what extent do you agree: "My emotional state significantly influences what I actually want to eat."</p>
+        <div class="ob-options">
+          <button class="ob-btn" onclick="handleAnswer('q3', 1, this)">1 (Disagree)</button>
+          <button class="ob-btn" onclick="handleAnswer('q3', 2, this)">2</button>
+          <button class="ob-btn" onclick="handleAnswer('q3', 3, this)">3</button>
+          <button class="ob-btn" onclick="handleAnswer('q3', 4, this)">4</button>
+          <button class="ob-btn" onclick="handleAnswer('q3', 5, this)">5 (Agree)</button>
+        </div>
+      </div>
+      <!-- Q7 Comfort -->
+      <div class="ob-card">
+        <p>When stressed, do you actively seek comfort foods (heavy carbs, fried items, sweets)?</p>
         <div class="ob-options">
           <button class="ob-btn" onclick="handleAnswer('q4', 0, this)">No</button>
           <button class="ob-btn" onclick="handleAnswer('q4', 1, this)">Yes</button>
         </div>
       </div>
-      <!-- Q5 -->
+      <!-- Q7 Fast -->
       <div class="ob-card">
-        <p>When stressed, do you crave sweet food?</p>
+        <p>When stressed, do you look for fast, convenient options to save time?</p>
         <div class="ob-options">
           <button class="ob-btn" onclick="handleAnswer('q5', 0, this)">No</button>
           <button class="ob-btn" onclick="handleAnswer('q5', 1, this)">Yes</button>
         </div>
       </div>
-      <!-- Q6 -->
+      <!-- Q8 Mood -->
       <div class="ob-card">
-        <p>Are you vegetarian?</p>
+        <p>Does your current mood/stress level impact your food choices the most?</p>
         <div class="ob-options">
           <button class="ob-btn" onclick="handleAnswer('q6', 0, this)">No</button>
           <button class="ob-btn" onclick="handleAnswer('q6', 1, this)">Yes</button>
         </div>
       </div>
-      <!-- Q7 -->
+      <!-- Q8 Time -->
       <div class="ob-card">
-        <p>When tired, do you reach for comfort food?</p>
+        <p>Does the time of day / class schedule impact your food choices the most?</p>
         <div class="ob-options">
           <button class="ob-btn" onclick="handleAnswer('q7', 0, this)">No</button>
           <button class="ob-btn" onclick="handleAnswer('q7', 1, this)">Yes</button>
         </div>
       </div>
-      <!-- Q8 -->
+      <!-- Q11 Feedback -->
       <div class="ob-card">
-        <p>How long do you spend deciding what to eat?</p>
+        <p>How likely are you to provide a quick 1-tap feedback rating if it refined future suggestions?</p>
         <div class="ob-options">
-          <button class="ob-btn" onclick="handleAnswer('q8', 1, this)">Quickly</button>
-          <button class="ob-btn" onclick="handleAnswer('q8', 3, this)">Average</button>
-          <button class="ob-btn" onclick="handleAnswer('q8', 5, this)">A long time</button>
+          <button class="ob-btn" onclick="handleAnswer('q8', 1, this)">1 (Unlikely)</button>
+          <button class="ob-btn" onclick="handleAnswer('q8', 2, this)">2</button>
+          <button class="ob-btn" onclick="handleAnswer('q8', 3, this)">3</button>
+          <button class="ob-btn" onclick="handleAnswer('q8', 4, this)">4</button>
+          <button class="ob-btn" onclick="handleAnswer('q8', 5, this)">5 (Likely)</button>
         </div>
       </div>
     </div>
 
     <div class="ob-section-title">2. Rate Your Taste</div>
-    <p style="font-size:12px; color:var(--muted); margin-bottom:15px;">Rate at least 3 dishes.</p>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">Rate at least 3 dishes so we can match your flavor profile.</p>
     <div id="taste-list">
       <!-- Generated by JS -->
     </div>
@@ -369,6 +376,7 @@ window.rateTaste = function(dish, rating, btn) {
 }
 
 function checkFormCompletion() {
+    // We need all 8 questions answered and at least 3 taste ratings
     if (Object.keys(surveyAnswers).length === 8 && Object.keys(tasteRatings).length >= 3) {
         let btn = document.getElementById('finish-btn');
         btn.style.background = "var(--green)";
