@@ -14,7 +14,8 @@ header{max-width:1240px;margin:auto;padding:27px 38px;display:flex;align-items:c
 .brand:hover svg{transform:rotate(-15deg) scale(1.1)}
 .brand span{color:#d88450;margin-left:1px}
 nav{display:flex;align-items:center;gap:30px;font-size:13px}
-.pill{border:0;background:var(--green);color:white;border-radius:50px;padding:14px 23px;text-decoration:none;display:inline-block;font-size:13px}
+.pill{border:0;background:var(--green);color:white;border-radius:50px;padding:14px 23px;text-decoration:none;display:inline-block;font-size:13px;transition: 0.2s;}
+.pill:hover{opacity: 0.9;}
 .hero{max-width:1240px;margin:auto;display:grid;grid-template-columns:1.05fr 1fr;gap:60px;padding:65px 38px 60px;align-items:center}
 .eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:2px;font-weight:bold;display:flex;align-items:center;gap:10px}
 .dot{width:7px;height:7px;background:#d98e59;border-radius:50%}
@@ -54,22 +55,31 @@ h2{font-family:Georgia,serif;font-weight:normal;font-size:40px;letter-spacing:-1
 .steps article{border-bottom:1px solid #d4dccb;padding:17px 0;display:grid;grid-template-columns:35px 1fr}
 .steps article:last-child{border:0}.steps h3{font-size:15px;margin:0}.steps p{margin:6px 0;font-size:12px}.num{color:#95a386;font-size:12px}
 footer{border-top:1px solid #dce0d2;max-width:1164px;margin:0 auto;padding:30px 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
-dialog{border:0;border-radius:22px;padding:32px;max-width:500px;width:90%;color:var(--ink);background:var(--cream); max-height: 90vh; overflow-y: auto;}
+dialog{border:0;border-radius:22px;padding:32px;max-width:500px;width:90%;color:var(--ink);background:var(--cream); max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2);}
 dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-size:30px}dialog p{font-size:13px}
 .rating{display:flex;gap:8px;margin-top:10px}.rating button{border:1px solid #cbd4bf;background:white;border-radius:9px;padding:12px;flex:1;cursor:pointer;}
 .notice{font-size:11px;color:var(--muted)}
 #toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:13px 22px;border-radius:30px;font-size:12px;display:none;z-index:10;text-align:center;}
 .ml-box{background:#f0f4e8;border:1px solid #d1d9c5;border-radius:12px;padding:15px;margin-bottom:20px;font-family:monospace;font-size:12px;color:#315a43;display:none;}
 
-/* NEW ONBOARDING STYLES */
+/* LOCKED VIEW STYLES */
+.locked-card{background:#fffdf7; border:1px solid #e4e5d9; border-radius:20px; padding:60px 40px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.03);}
+.locked-card h3{font-family:Georgia, serif; font-size:28px; margin-bottom:15px;}
+
+/* ONBOARDING STYLES */
 .ob-progress{width:100%; height:6px; background:#e0e5d8; border-radius:3px; margin-bottom:30px; overflow:hidden;}
 .ob-progress-bar{height:100%; background:var(--green); width:0%; transition:width 0.3s ease;}
-.ob-question{font-family:Georgia, serif; font-size:26px; margin-bottom:30px; line-height:1.3;}
+.ob-question{font-family:Georgia, serif; font-size:24px; margin-bottom:25px; line-height:1.3;}
 .ob-options{display:flex; flex-direction:column; gap:12px;}
 .ob-btn{background:white; border:2px solid #dce1d2; border-radius:14px; padding:18px; font-size:16px; font-weight:bold; text-align:left; transition:0.2s; color:var(--ink);}
 .ob-btn:hover{border-color:var(--green); background:#f0f4e8;}
-.ob-btn.selected{border-color:var(--green); background:var(--green); color:white;}
-.ob-emoji{font-size:60px; text-align:center; margin-bottom:15px;}
+.onboarding-list{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
+.onboarding-item{display:flex; justify-content:space-between; align-items:center; background:white; padding:12px 15px; border-radius:10px; border:1px solid #d9dfcf;}
+.onboarding-item span{font-size:14px; font-weight:bold;}
+.onboarding-rating{display:flex; gap:5px;}
+.onboarding-rating button{border:1px solid #ccc; background:transparent; border-radius:5px; padding:8px 12px; cursor:pointer; font-size:16px; transition:0.2s;}
+.onboarding-rating button.selected{background:var(--green); color:white; border-color:var(--green);}
+
 @media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
 </style>
 </head>
@@ -85,7 +95,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <nav>
     <a href="#discover">Find your bite</a>
     <a href="#how">How it works</a>
-    <a class="pill" href="#discover">What's your mood? ↗</a>
+    <a class="pill cta-btn" href="#discover">What's your mood? ↗</a>
   </nav>
 </header>
 
@@ -95,7 +105,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       <div class="eyebrow"><i class="dot"></i>A little more feeling. A little less scrolling.</div>
       <h1>Good food.<br>The right <em>mood.</em></h1>
       <p>Some days call for comfort. Others, a fresh start. Discover food that fits how you feel, right here, right now.</p>
-      <a class="pill" href="#discover">Find my next bite <span style="margin-left:25px">↗</span></a>
+      <a class="pill cta-btn" href="#discover">Find my next bite <span style="margin-left:25px">↗</span></a>
       <div class="micro">Made for your mood. Inspired by mindful eating.</div>
     </div>
     <div class="visual" role="img" aria-label="Illustrated avocado bowl with vegetables and grains">
@@ -116,43 +126,57 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
       <div class="eyebrow">01 / Check in with yourself</div>
       <div class="notice">Interactive concept · AI backend connected</div>
     </div>
-    <h2>How are you feeling?</h2>
-    <p style="color:var(--muted);font-size:14px">No right or wrong answer. Just a starting point for something delicious.</p>
-    
-    <div class="moods" id="moods"></div>
-    
-    <div class="filters">
-      <label>Food preference 
-        <select id="diet">
-          <option value="all">Anything goes</option>
-          <option value="vegetarian">Vegetarian</option>
-        </select>
-      </label>
-      <label>Time of day 
-        <select id="time">
-          <option value="morning">Morning</option>
-          <option value="afternoon">Afternoon</option>
-          <option value="late_night">Late Night Study</option>
-        </select>
-      </label>
-      <label>Weather 
-        <select id="weather">
-          <option value="sunny">Sunny/Hot</option>
-          <option value="rainy">Rainy/Cold</option>
-        </select>
-      </label>
-      <label>Find restaurants around <input id="location" value="HKUST, Hong Kong" aria-label="Restaurant search location"></label>
-      <button class="text-btn" id="shuffle">Something different ↻</button>
+
+    <!-- LOCKED VIEW (Shows if no profile) -->
+    <div id="locked-view" style="display: none; margin-top: 30px;">
+      <div class="locked-card">
+        <div style="font-size: 60px; margin-bottom: 15px;">👋</div>
+        <h3>Let's find your food personality.</h3>
+        <p style="color:var(--muted); max-width:400px; margin: 0 auto 30px auto;">Take a quick 2-minute survey so our AI can learn your taste, budget, and mood patterns to give you perfect recommendations.</p>
+        <button class="pill cta-btn" style="font-size: 16px; padding: 18px 40px; border: none;">Build My Profile ↗</button>
+      </div>
     </div>
 
-    <div id="ml_status" class="ml-box">
-      > Initializing ML Engine...<br>
-      > Fetching user context...<br>
-      > Running Context-Aware Scoring...
-    </div>
+    <!-- APP VIEW (Shows if profile exists) -->
+    <div id="app-view" style="display: none;">
+      <h2>How are you feeling?</h2>
+      <p style="color:var(--muted);font-size:14px">No right or wrong answer. Just a starting point for something delicious.</p>
+      
+      <div class="moods" id="moods"></div>
+      
+      <div class="filters">
+        <label>Food preference 
+          <select id="diet">
+            <option value="all">Anything goes</option>
+            <option value="vegetarian">Vegetarian</option>
+          </select>
+        </label>
+        <label>Time of day 
+          <select id="time">
+            <option value="morning">Morning</option>
+            <option value="afternoon">Afternoon</option>
+            <option value="late_night">Late Night Study</option>
+          </select>
+        </label>
+        <label>Weather 
+          <select id="weather">
+            <option value="sunny">Sunny/Hot</option>
+            <option value="rainy">Rainy/Cold</option>
+          </select>
+        </label>
+        <label>Find restaurants around <input id="location" value="HKUST, Hong Kong" aria-label="Restaurant search location"></label>
+        <button class="text-btn" id="shuffle">Something different ↻</button>
+      </div>
 
-    <div id="resultIntro" class="micro" aria-live="polite" style="margin-bottom:15px;"></div>
-    <div class="results" id="results"></div>
+      <div id="ml_status" class="ml-box">
+        > Initializing ML Engine...<br>
+        > Fetching user context...<br>
+        > Running Context-Aware Scoring...
+      </div>
+
+      <div id="resultIntro" class="micro" aria-live="polite" style="margin-bottom:15px;"></div>
+      <div class="results" id="results"></div>
+    </div>
   </section>
 
   <section class="section" id="how">
@@ -188,10 +212,10 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <div id="dialogBody"></div>
 </dialog>
 
-<!-- NEW STEP-BY-STEP ONBOARDING MODAL -->
+<!-- ONBOARDING MODAL -->
 <dialog id="onboarding">
   <div style="text-align:center;">
-    <div class="ob-progress"><div class="ob-progress-bar" id="ob-bar"></div></div>
+    <div class="ob-progress" id="ob-progress-container"><div class="ob-progress-bar" id="ob-bar"></div></div>
     <div id="ob-content"></div>
   </div>
 </dialog>
@@ -208,93 +232,140 @@ if (!myUserId) {
     localStorage.setItem('moodbite_uid', myUserId);
 }
 
-// --- STEP-BY-STEP ONBOARDING LOGIC ---
+// --- ONBOARDING FLOW ---
 let hasProfile = localStorage.getItem('moodbite_profile_built');
-let currentStep = 0;
+let currentStep = 0; 
 let surveyAnswers = {}; 
 let tasteRatings = {};
 
-// Define the exact flow of questions (K-Means first, then Taste Profile)
-const onboardingSteps = [
-    // --- K-MEANS QUESTIONS (Hidden jargon) ---
-    { type: 'question', id: 'q1', text: "How much does price matter when choosing a meal?", options: [{label: "Not much", val: 1}, {label: "Somewhat", val: 3}, {label: "A lot", val: 5}] },
-    { type: 'question', id: 'q2', text: "When eating, what matters more to you?", options: [{label: "Health", val: 1}, {label: "Balance", val: 3}, {label: "Taste", val: 5}] },
-    { type: 'question', id: 'q3', text: "How often do you eat out or order in?", options: [{label: "Rarely", val: 1}, {label: "Sometimes", val: 3}, {label: "Often", val: 5}] },
-    { type: 'question', id: 'q4', text: "When stressed, do you crave savory food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
-    { type: 'question', id: 'q5', text: "When stressed, do you crave sweet food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
-    { type: 'question', id: 'q6', text: "Are you vegetarian?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
-    { type: 'question', id: 'q7', text: "When tired, do you reach for comfort food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
-    { type: 'question', id: 'q8', text: "How long do you spend deciding what to eat?", options: [{label: "Quickly", val: 1}, {label: "Average", val: 3}, {label: "A long time", val: 5}] },
-    
-    // --- TASTE PROFILE (Food Ratings) ---
-    { type: 'rating', id: 'Spicy Ramen', text: "How do you feel about Spicy Ramen?", emoji: "🍜", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
-    { type: 'rating', id: 'Margherita Pizza', text: "How do you feel about Pizza?", emoji: "🍕", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
-    { type: 'rating', id: 'Avocado Grain Bowl', text: "How do you feel about Grain Bowls?", emoji: "🥑", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
-    { type: 'rating', id: 'Cheeseburger', text: "How do you feel about Cheeseburgers?", emoji: "🍔", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] },
-    { type: 'rating', id: 'Sushi Platter', text: "How do you feel about Sushi?", emoji: "🍣", options: [{label: "Love it", val: 5}, {label: "It's okay", val: 3}, {label: "Not for me", val: 1}] }
+const kmeansQuestions = [
+    { id: 'q1', text: "How much does price matter when choosing a meal?", options: [{label: "Not much", val: 1}, {label: "Somewhat", val: 3}, {label: "A lot", val: 5}] },
+    { id: 'q2', text: "When eating, what matters more to you?", options: [{label: "Health", val: 1}, {label: "Balance", val: 3}, {label: "Taste", val: 5}] },
+    { id: 'q3', text: "How often do you eat out or order in?", options: [{label: "Rarely", val: 1}, {label: "Sometimes", val: 3}, {label: "Often", val: 5}] },
+    { id: 'q4', text: "When stressed, do you crave savory food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { id: 'q5', text: "When stressed, do you crave sweet food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { id: 'q6', text: "Are you vegetarian?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { id: 'q7', text: "When tired, do you reach for comfort food?", options: [{label: "No", val: 0}, {label: "Yes", val: 1}] },
+    { id: 'q8', text: "How long do you spend deciding what to eat?", options: [{label: "Quickly", val: 1}, {label: "Average", val: 3}, {label: "A long time", val: 5}] }
 ];
 
-// Force onboarding if not done
-if (!hasProfile) {
-    setTimeout(() => {
-        document.getElementById('onboarding').showModal();
-        renderStep();
-    }, 1000);
-}
+const tasteFoods = [
+    { dish: "Spicy Ramen", emoji: "🍜" },
+    { dish: "Margherita Pizza", emoji: "🍕" },
+    { dish: "Avocado Grain Bowl", emoji: "🥑" },
+    { dish: "Cheeseburger", emoji: "🍔" },
+    { dish: "Sushi Platter", emoji: "🍣" }
+];
 
-function renderStep() {
-    if (currentStep >= onboardingSteps.length) return;
-
-    const step = onboardingSteps[currentStep];
-    const progressBar = document.getElementById('ob-bar');
-    progressBar.style.width = `${((currentStep) / onboardingSteps.length) * 100}%`;
-
-    const content = document.getElementById('ob-content');
-    
-    let html = '';
-    if (step.emoji) {
-        html += `<div class="ob-emoji">${step.emoji}</div>`;
-    }
-    html += `<div class="ob-question">${step.text}</div>`;
-    html += `<div class="ob-options">`;
-    
-    step.options.forEach(opt => {
-        html += `<button class="ob-btn" onclick="handleAnswer('${step.id}', ${opt.val})">${opt.label}</button>`;
-    });
-    
-    html += `</div>`;
-    content.innerHTML = html;
-}
-
-window.handleAnswer = function(id, val) {
-    const step = onboardingSteps[currentStep];
-    
-    // Save answer
-    if (step.type === 'question') {
-        surveyAnswers[id] = val;
+// Toggle Locked vs App View on Load
+function checkProfileStatus() {
+    if (hasProfile) {
+        document.getElementById('locked-view').style.display = 'none';
+        document.getElementById('app-view').style.display = 'block';
+        render(); // Load recommendations
     } else {
-        tasteRatings[id] = val;
+        document.getElementById('locked-view').style.display = 'block';
+        document.getElementById('app-view').style.display = 'none';
+    }
+}
+
+// Open Modal
+document.querySelectorAll('.cta-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if (!hasProfile) {
+            e.preventDefault(); // Stop auto-scroll
+            document.getElementById('discover').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                document.getElementById('onboarding').showModal();
+                renderOnboarding();
+            }, 400);
+        }
+    });
+});
+
+function renderOnboarding() {
+    const content = document.getElementById('ob-content');
+    const bar = document.getElementById('ob-bar');
+    const progressContainer = document.getElementById('ob-progress-container');
+
+    if (currentStep === 0) {
+        progressContainer.style.display = 'none';
+        content.innerHTML = `
+            <div style="font-size:50px; margin-bottom:15px;">👋</div>
+            <h2 style="font-family:Georgia, serif; margin-bottom:15px;">Welcome to MoodBite</h2>
+            <p style="color:var(--muted); margin-bottom:25px; font-size:14px; line-height:1.6;">We want to personalize your food journey. Let's start with a few quick questions about your eating habits, then rate some dishes so our AI can learn your taste.</p>
+            <button class="pill" style="width: 100%; padding: 16px;" onclick="nextStep()">Let's Get Started</button>
+        `;
+        return;
     }
 
-    // Animate selection
-    const buttons = document.querySelectorAll('.ob-btn');
-    buttons.forEach(b => b.style.opacity = '0.5');
-    event.target.style.opacity = '1';
-    event.target.style.transform = 'scale(0.98)';
+    if (currentStep >= 1 && currentStep <= 8) {
+        progressContainer.style.display = 'block';
+        bar.style.width = `${((currentStep - 1) / 9) * 100}%`;
+        
+        const q = kmeansQuestions[currentStep - 1];
+        content.innerHTML = `
+            <div class="ob-question">${q.text}</div>
+            <div class="ob-options">
+                ${q.options.map(opt => `<button class="ob-btn" onclick="handleAnswer('${q.id}', ${opt.val}, this)">${opt.label}</button>`).join('')}
+            </div>
+        `;
+        return;
+    }
 
-    // Move to next step
-    setTimeout(() => {
-        currentStep++;
-        if (currentStep < onboardingSteps.length) {
-            renderStep();
-        } else {
-            submitOnboarding();
-        }
-    }, 250);
+    if (currentStep === 9) {
+        progressContainer.style.display = 'block';
+        bar.style.width = `90%`;
+        
+        content.innerHTML = `
+            <h2 style="font-family:Georgia, serif; margin-bottom:10px;">Rate your taste</h2>
+            <p style="color:var(--muted); margin-bottom:20px; font-size:13px;">Rate at least 3 dishes so our AI can match your flavor profile.</p>
+            <div class="onboarding-list">
+                ${tasteFoods.map(f => `
+                    <div class="onboarding-item">
+                        <span>${f.emoji} ${f.dish}</span>
+                        <div class="onboarding-rating">
+                            <button onclick="rateTaste('${f.dish}', 5, this)">👍</button>
+                            <button onclick="rateTaste('${f.dish}', 3, this)">😐</button>
+                            <button onclick="rateTaste('${f.dish}', 1, this)">👎</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <button id="finish-taste-btn" class="pill" style="width: 100%; margin-top: 25px; display: none;" onclick="submitOnboarding()">Save Profile</button>
+        `;
+        return;
+    }
+}
+
+window.nextStep = function() {
+    currentStep++;
+    renderOnboarding();
+}
+
+window.handleAnswer = function(id, val, btn) {
+    surveyAnswers[id] = val;
+    const buttons = btn.parentElement.querySelectorAll('.ob-btn');
+    buttons.forEach(b => b.style.opacity = '0.5');
+    btn.style.opacity = '1';
+    btn.style.transform = 'scale(0.98)';
+    setTimeout(() => { nextStep(); }, 200);
+}
+
+window.rateTaste = function(dish, rating, btn) {
+    let row = btn.parentElement;
+    row.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    tasteRatings[dish] = rating;
+    if (Object.keys(tasteRatings).length >= 3) {
+        document.getElementById('finish-taste-btn').style.display = 'block';
+    }
 }
 
 async function submitOnboarding() {
     const content = document.getElementById('ob-content');
+    document.getElementById('ob-bar').style.width = `100%`;
+    
     content.innerHTML = `
         <div style="padding: 40px 0;">
             <div style="font-size:40px; margin-bottom:20px;">🧠</div>
@@ -304,8 +375,7 @@ async function submitOnboarding() {
     `;
 
     let ratingsPayload = Object.keys(tasteRatings).map(dish => ({
-        dish: dish,
-        rating: tasteRatings[dish]
+        dish: dish, rating: tasteRatings[dish]
     }));
 
     try {
@@ -322,26 +392,36 @@ async function submitOnboarding() {
         
         if (!response.ok) throw new Error("Server error");
 
+        document.getElementById('ob-progress-container').style.display = 'none';
+        content.innerHTML = `
+            <div style="font-size:60px; margin-bottom:15px;">🎉</div>
+            <h2 style="font-family:Georgia, serif; margin-bottom:10px;">You're all set!</h2>
+            <p style="color:var(--muted); margin-bottom:25px; font-size:14px;">We've successfully clustered your profile and personalization is ready. Let's find your next bite.</p>
+            <button class="pill" style="width: 100%; padding: 16px;" onclick="closeOnboarding()">See Recommendations ↗</button>
+        `;
+
         hasProfile = true;
         localStorage.setItem('moodbite_profile_built', 'true');
-        document.getElementById('onboarding').close();
-        toast('✅ Profile built! Initializing personalized AI...');
-        render();
+
     } catch (err) {
         console.error(err);
         toast('⚠️ Failed to connect to backend. Try again.', true);
-        // Reset to try again
         currentStep = 0; 
-        renderStep();
+        renderOnboarding();
     }
 }
 
-// Prevent closing onboarding early
+window.closeOnboarding = function() {
+    document.getElementById('onboarding').close();
+    toast('✅ Profile built! Initializing personalized AI...');
+    checkProfileStatus(); // Swaps to app-view and renders recommendations
+}
+
 document.getElementById('onboarding').addEventListener('cancel', function(e) {
-    e.preventDefault();
+    e.preventDefault(); // Force them to finish
 });
 
-// --- MAIN APP LOGIC ---
+// --- MAIN APP LOGIC (Only runs when app-view is unlocked) ---
 const moods=[['stressed','😮‍💨','Stressed'],['happy','😊','Happy'],['tired','😴','Tired'],['cozy','☺️','Cozy'],['adventurous','🤩','Adventurous'],['balanced','🌿','Balanced']];
 const fallbackDishes=[
   {id:1,name:'Dim Sum Platter',emoji:'🥟',veg:false,desc:'A classic Cantonese comfort.'},
@@ -354,7 +434,6 @@ let mood='stressed';
 let data = JSON.parse(localStorage.getItem('moodbite')||'{}');
 data.saved ??= []; data.feedback ??= [];
 let currentAbortController = null;
-
 let currentModalState = { ratingSubmitted: false, tagSubmitted: false, dishName: "" };
 
 function persist(){localStorage.setItem('moodbite',JSON.stringify(data));}
@@ -417,14 +496,11 @@ async function render(){
 
   } catch (error) {
     if (error.name === 'AbortError') return; 
-    
     mlBox.style.display = 'none';
     resultsDiv.classList.remove('loading');
     toast("⚠️ Backend offline. Showing cached recommendations.", true);
-    
     let shuffled = [...fallbackDishes].sort(() => 0.5 - Math.random());
     let picks = shuffled.slice(0, 3);
-    
     resultsDiv.innerHTML = picks.map(d=>`
       <article class="food">
         <div class="food-art">${d.emoji}</div>
@@ -465,7 +541,6 @@ document.querySelector('#results').onclick = e => {
   
   let dName = b.dataset.name;
   let loc = document.querySelector('#location').value.trim() || 'HKUST Hong Kong';
-  
   let currentEmoji = '🍽️';
   let found = fallbackDishes.find(x => x.name === dName);
   if (found) currentEmoji = found.emoji;
@@ -475,11 +550,8 @@ document.querySelector('#results').onclick = e => {
   document.querySelector('#dialogBody').innerHTML=`
     <div style="font-size:60px; text-align:center; margin-bottom:10px;">${currentEmoji}</div>
     <h2 style="text-align:center; margin-top:0; margin-bottom:20px;">${dName}</h2>
-    
     <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dName+' near '+loc)}" target="_blank" style="display:block; text-align:center; background:var(--green); color:white; padding:15px; border-radius:12px; font-size:15px; font-weight:bold; text-decoration:none; margin-bottom:30px;">Find restaurants on Google Maps ↗</a>
-
     <hr style="border:0;border-top:1px solid #d9dfcf; margin:20px 0">
-
     <h3 style="font-size:15px; text-align:center; margin-bottom:5px; font-family:Georgia, serif;">1. Did it fit your mood?</h3>
     <p class="notice" style="margin-bottom:15px; text-align:center;">Your feedback trains the AI model.</p>
     <div class="rating" style="display:flex; gap:8px;">
@@ -487,9 +559,7 @@ document.querySelector('#results').onclick = e => {
       <button data-rate="okay" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">🙂 Okay</button>
       <button data-rate="no" data-id="${b.dataset.find}" data-name="${dName}" style="flex:1; padding:12px 5px; border-radius:8px; border:1px solid #cbd4bf; background:white; font-size:12px; cursor:pointer;">😕 Too Heavy</button>
     </div>
-
     <hr style="border:0;border-top:1px solid #d9dfcf; margin:20px 0">
-
     <h3 style="font-size:15px; text-align:center; margin-bottom:5px; font-family:Georgia, serif;">2. Help the Community</h3>
     <p class="notice" style="margin-bottom:15px; text-align:center;">Tag this dish to train the crowdsourcing layer.</p>
     <div id="tag-buttons" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
@@ -498,7 +568,6 @@ document.querySelector('#results').onclick = e => {
       <button class="tag-btn" data-tag="reward" data-name="${dName}" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc; background:white; font-size:12px; cursor:pointer;">🍰 Reward</button>
       <button class="tag-btn" data-tag="adventurous" data-name="${dName}" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc; background:white; font-size:12px; cursor:pointer;">🌶️ Adventurous</button>
     </div>
-    
     <button id="close-modal-btn" class="pill" style="margin-top: 25px; width: 100%; background: #ccc; color: white; pointer-events: none; transition: 0.3s;">Please Rate & Tag to Close</button>
   `;
   document.querySelector('#meal').showModal();
@@ -509,25 +578,20 @@ document.querySelector('#dialogBody').onclick = async(e) => {
   if (tagBtn) {
     let tag = tagBtn.dataset.tag;
     let dName = tagBtn.dataset.name;
-    
     document.querySelectorAll('.tag-btn').forEach(b => {
         b.style.background = "white"; b.style.color = "var(--ink)"; b.innerText = b.innerText.replace("✅ ", "");
     });
     tagBtn.style.background = "var(--green)";
     tagBtn.style.color = "white";
     tagBtn.innerText = "✅ " + tagBtn.innerText;
-    
     try {
         await fetch(`${API_BASE_URL}/api/tag_food`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ dish_name: dName, tag: tag, user_id: myUserId })
         });
         currentModalState.tagSubmitted = true;
         checkBothSubmitted();
-    } catch(err) {
-        toast("⚠️ Failed to save tag.", true);
-    }
+    } catch(err) { toast("⚠️ Failed to save tag.", true); }
     return;
   }
 
@@ -535,32 +599,23 @@ document.querySelector('#dialogBody').onclick = async(e) => {
   if(rateBtn){
     let rating = rateBtn.dataset.rate;
     let dName = rateBtn.dataset.name;
-    
     document.querySelectorAll('[data-rate]').forEach(b => {
         b.style.background = "white"; b.style.color = "var(--ink)"; b.style.fontWeight = "normal";
     });
     rateBtn.style.background = "var(--green)";
     rateBtn.style.color = "white";
     rateBtn.style.fontWeight = "bold";
-
     toast("⏳ Updating User-Item Matrix...");
-    
     try {
       await fetch(`${API_BASE_URL}/api/feedback`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({dish_id: rateBtn.dataset.find, dish_name: dName, rating: rating, mood: mood, user_id: myUserId})
       });
       currentModalState.ratingSubmitted = true;
       checkBothSubmitted();
-    } catch(err) {
-        toast("⚠️ Failed to save feedback to database.", true);
-    }
+    } catch(err) { toast("⚠️ Failed to save feedback to database.", true); }
   }
-  
-  if (e.target.id === 'close-modal-btn') {
-      document.querySelector('#meal').close();
-  }
+  if (e.target.id === 'close-modal-btn') { document.querySelector('#meal').close(); }
 };
 
 function checkBothSubmitted() {
@@ -573,22 +628,19 @@ function checkBothSubmitted() {
 }
 
 document.querySelector('#meal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        e.preventDefault(); 
-        toast("⚠️ Please complete both steps before closing.", true);
-    }
+    if (e.target === this) { e.preventDefault(); toast("⚠️ Please complete both steps before closing.", true); }
 });
 
 document.querySelector('#meal').addEventListener('cancel', function(e) {
     if (!currentModalState.ratingSubmitted || !currentModalState.tagSubmitted) {
-        e.preventDefault();
-        toast("⚠️ Please complete both steps before closing.", true);
+        e.preventDefault(); toast("⚠️ Please complete both steps before closing.", true);
     }
 });
 
 document.querySelector('#shuffle').onclick = render;
 
-render();
+// Run on page load
+checkProfileStatus();
 </script>
 </body>
 </html>
