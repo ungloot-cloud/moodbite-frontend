@@ -66,6 +66,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 .onboarding-rating{display:flex; gap:5px;}
 .onboarding-rating button{border:1px solid #ccc; background:transparent; border-radius:5px; padding:8px 12px; cursor:pointer; font-size:16px; transition:0.2s;}
 .onboarding-rating button.selected{background:var(--green); color:white; border-color:var(--green);}
+.survey-select{border:1px solid #ccc; border-radius:5px; padding:6px; font-size:12px;}
 @media(max-width:750px){header{padding:22px}nav{gap:15px}nav a:not(.pill){display:none}.hero{grid-template-columns:1fr;padding:40px 22px;gap:30px}h1{font-size:56px}.visual{height:335px}.plate{width:250px;height:250px}.section{padding:42px 22px}.moods{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:1fr}.food-art{height:190px}.split{grid-template-columns:1fr;gap:20px;padding:28px}h2{font-size:34px}.section-head{display:block}.strip span{padding:0 8px;display:inline-block;font-size:10px}footer{margin:0 22px;gap:20px;flex-direction:column;text-align:center}}
 </style>
 </head>
@@ -180,7 +181,6 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <a href="#discover" style="font-weight:bold;color:var(--green)">Find your bite ↑</a>
 </footer>
 
-<!-- Notice: The "X" close button is completely removed from the dialog tag -->
 <dialog id="meal">
   <div id="dialogBody"></div>
 </dialog>
@@ -189,10 +189,46 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
   <div style="text-align:center;">
     <div style="font-size:40px; margin-bottom:10px;">📝</div>
     <h2 style="font-family:Georgia, serif; margin-bottom:10px;">Build Your Taste Profile</h2>
-    <p style="color:var(--muted); margin-bottom:15px;">We need to know your baseline preferences to give you hyper-personalized recommendations. Rate these 5 dishes to get started.</p>
+    <p style="color:var(--muted); margin-bottom:15px;">Rate these 5 dishes and answer a few quick questions to let our AI cluster you.</p>
     
     <div class="onboarding-list" id="onboarding-list"></div>
     
+    <h3 style="font-size: 14px; margin: 20px 0 10px 0;">AI Profiling Survey (K-Means)</h3>
+    <div class="onboarding-list">
+        <div class="onboarding-item">
+            <span>How much does price matter?</span>
+            <select class="survey-select" id="q1"><option value="1">1 (Low)</option><option value="3" selected>3</option><option value="5">5 (High)</option></select>
+        </div>
+        <div class="onboarding-item">
+            <span>Taste vs Health priority?</span>
+            <select class="survey-select" id="q2"><option value="1">1 (Health)</option><option value="3" selected>3</option><option value="5">5 (Taste)</option></select>
+        </div>
+        <div class="onboarding-item">
+            <span>Eating out frequency?</span>
+            <select class="survey-select" id="q3"><option value="1">Rarely</option><option value="3" selected>Sometimes</option><option value="5">Often</option></select>
+        </div>
+        <div class="onboarding-item">
+            <span>Do you crave savory when stressed?</span>
+            <select class="survey-select" id="q4"><option value="0">No</option><option value="1" selected>Yes</option></select>
+        </div>
+        <div class="onboarding-item">
+            <span>Do you crave sweet when stressed?</span>
+            <select class="survey-select" id="q5"><option value="0" selected>No</option><option value="1">Yes</option></select>
+        </div>
+        <div class="onboarding-item">
+            <span>Are you vegetarian?</span>
+            <select class="survey-select" id="q6"><option value="0" selected>No</option><option value="1">Yes</option></select>
+        </div>
+        <div class="onboarding-item">
+            <span>Prefer comfort food when tired?</span>
+            <select class="survey-select" id="q7"><option value="0">No</option><option value="1" selected>Yes</option></select>
+        </div>
+        <div class="onboarding-item">
+            <span>How long do you spend deciding?</span>
+            <select class="survey-select" id="q8"><option value="1">Fast</option><option value="3" selected>Average</option><option value="5">Long</option></select>
+        </div>
+    </div>
+
     <button id="finish-onboarding" class="pill" style="margin-top: 25px; width: 100%; display: none;">Save Profile & Continue</button>
     <button id="skip-onboarding" style="background:none; border:none; color:var(--muted); text-decoration:underline; margin-top:15px; cursor:pointer; font-size:12px;">Skip for now</button>
   </div>
@@ -201,6 +237,7 @@ dialog::backdrop{background:#132d2266;backdrop-filter:blur(4px)}dialog h2{font-s
 <div id="toast" role="status"></div>
 
 <script>
+// ⚠️ CHANGE THIS TO YOUR LIVE RENDER URL
 const API_BASE_URL = "https://moodbite-backend-89pi.onrender.com"; 
 
 let myUserId = localStorage.getItem('moodbite_uid');
@@ -264,11 +301,26 @@ document.getElementById('finish-onboarding').onclick = async () => {
         rating: onboardingData[dish]
     }));
     
+    // Get the 8 K-Means features
+    let q1 = parseFloat(document.getElementById('q1').value);
+    let q2 = parseFloat(document.getElementById('q2').value);
+    let q3 = parseFloat(document.getElementById('q3').value);
+    let q4 = parseFloat(document.getElementById('q4').value);
+    let q5 = parseFloat(document.getElementById('q5').value);
+    let q6 = parseFloat(document.getElementById('q6').value);
+    let q7 = parseFloat(document.getElementById('q7').value);
+    let q8 = parseFloat(document.getElementById('q8').value);
+    
     try {
         const response = await fetch(`${API_BASE_URL}/api/onboarding`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ user_id: myUserId, ratings: payload })
+            body: JSON.stringify({ 
+                user_id: myUserId, 
+                ratings: payload,
+                q1: q1, q2: q2, q3: q3, q4: q4,
+                q5: q5, q6: q6, q7: q7, q8: q8
+            })
         });
         
         if (!response.ok) throw new Error("Server error");
@@ -307,7 +359,6 @@ let data = JSON.parse(localStorage.getItem('moodbite')||'{}');
 data.saved ??= []; data.feedback ??= [];
 let currentAbortController = null;
 
-// State to track if the user has rated AND tagged
 let currentModalState = { ratingSubmitted: false, tagSubmitted: false, dishName: "" };
 
 function persist(){localStorage.setItem('moodbite',JSON.stringify(data));}
@@ -423,7 +474,6 @@ document.querySelector('#results').onclick = e => {
   let found = fallbackDishes.find(x => x.name === dName);
   if (found) currentEmoji = found.emoji;
 
-  // Reset state to locked
   currentModalState = { ratingSubmitted: false, tagSubmitted: false, dishName: dName };
 
   document.querySelector('#dialogBody').innerHTML=`
@@ -453,20 +503,17 @@ document.querySelector('#results').onclick = e => {
       <button class="tag-btn" data-tag="adventurous" data-name="${dName}" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc; background:white; font-size:12px; cursor:pointer;">🌶️ Adventurous</button>
     </div>
     
-    <!-- The Done button is disabled until both actions are completed -->
     <button id="close-modal-btn" class="pill" style="margin-top: 25px; width: 100%; background: #ccc; color: white; pointer-events: none; transition: 0.3s;">Please Rate & Tag to Close</button>
   `;
   document.querySelector('#meal').showModal();
 };
 
 document.querySelector('#dialogBody').onclick = async(e) => {
-  // 1. Handle Tag Click
   let tagBtn = e.target.closest('.tag-btn');
   if (tagBtn) {
     let tag = tagBtn.dataset.tag;
     let dName = tagBtn.dataset.name;
     
-    // Visual update
     document.querySelectorAll('.tag-btn').forEach(b => {
         b.style.background = "white"; b.style.color = "var(--ink)"; b.innerText = b.innerText.replace("✅ ", "");
     });
@@ -488,13 +535,11 @@ document.querySelector('#dialogBody').onclick = async(e) => {
     return;
   }
 
-  // 2. Handle Rating Click
   let rateBtn = e.target.closest('[data-rate]');
   if(rateBtn){
     let rating = rateBtn.dataset.rate;
     let dName = rateBtn.dataset.name;
     
-    // Visual update
     document.querySelectorAll('[data-rate]').forEach(b => {
         b.style.background = "white"; b.style.color = "var(--ink)"; b.style.fontWeight = "normal";
     });
@@ -517,13 +562,11 @@ document.querySelector('#dialogBody').onclick = async(e) => {
     }
   }
   
-  // 3. Handle Done Click
   if (e.target.id === 'close-modal-btn') {
       document.querySelector('#meal').close();
   }
 };
 
-// This function unlocks the button ONLY when both are true
 function checkBothSubmitted() {
     if (currentModalState.ratingSubmitted && currentModalState.tagSubmitted) {
         let closeBtn = document.getElementById('close-modal-btn');
@@ -533,15 +576,13 @@ function checkBothSubmitted() {
     }
 }
 
-// Prevent clicking outside the box from closing it
 document.querySelector('#meal').addEventListener('click', function(e) {
     if (e.target === this) {
-        e.preventDefault(); // Do nothing
+        e.preventDefault(); 
         toast("⚠️ Please complete both steps before closing.", true);
     }
 });
 
-// Prevent the 'Esc' key from closing it
 document.querySelector('#meal').addEventListener('cancel', function(e) {
     if (!currentModalState.ratingSubmitted || !currentModalState.tagSubmitted) {
         e.preventDefault();
